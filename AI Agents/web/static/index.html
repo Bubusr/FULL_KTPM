@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agents Studio — KTPM Lab (RAG & Multi-LLM)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+      <!-- Sidebar Header -->
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">🤖</div>
+          <div class="brand-text">
+            <h2>AI AGENTS STUDIO</h2>
+            <span class="badge badge-black">KTPM LAB</span>
+          </div>
+        </div>
+        <button id="btn-new-chat" class="btn btn-primary btn-block">
+          <span class="icon">＋</span> Cuộc trò chuyện mới
+        </button>
+      </div>
+
+      <!-- Mode & Model Selector Panel -->
+      <div class="sidebar-section">
+        <div class="section-title-wrapper">
+          <label class="section-title">CHẾ ĐỘ MÔ HÌNH (2 MODES)</label>
+          <button id="btn-check-models" class="btn-check-sm" title="Quét kiểm tra trạng thái hoạt động của tất cả Models">
+            🔄 Quét Live
+          </button>
+        </div>
+        
+        <!-- Mode Tabs -->
+        <div class="mode-tabs">
+          <button class="tab-btn active" data-mode="api" id="tab-api">
+            ⚡ API Provider
+          </button>
+          <button class="tab-btn" data-mode="g4f" id="tab-g4f">
+            🌐 Free G4F
+          </button>
+        </div>
+
+        <!-- Model Dropdown -->
+        <div class="field-group">
+          <label for="select-model" class="field-label">Chọn Mô hình LLM:</label>
+          <select id="select-model" class="select-box">
+            <!-- Populated dynamically via JS -->
+          </select>
+          <div id="model-desc" class="model-desc-box"></div>
+          
+          <!-- Live Status Alert Box -->
+          <div id="model-status-alert" class="model-alert-box status-checking">
+            <span class="alert-icon">⏳</span>
+            <span class="alert-msg">Đang kiểm tra kết nối mô hình...</span>
+          </div>
+        </div>
+
+        <!-- Tool Configuration Toggles -->
+        <div class="field-group">
+          <label class="field-label">Công cụ Agent (Tools):</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-rag" checked>
+              <span class="custom-checkbox"></span>
+              <span>📚 RAG Cornwall (ChromaDB)</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="chk-weather" checked>
+              <span class="custom-checkbox"></span>
+              <span>🌦️ Dự báo thời tiết (Weather API)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat History Section -->
+      <div class="sidebar-section history-section">
+        <div class="history-header">
+          <label class="section-title">LỊCH SỬ HỘI THOẠI</label>
+          <span id="chat-count" class="badge badge-gray">0</span>
+        </div>
+        
+        <div class="search-box">
+          <input type="text" id="search-chat" placeholder="🔍 Tìm kiếm hội thoại..." class="input-text">
+        </div>
+
+        <div id="chat-list" class="chat-list">
+          <!-- Chat list items will be injected here -->
+        </div>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="status-indicator">
+          <span class="status-dot online"></span>
+          <span id="system-status-text">Hệ thống: Trực tuyến (Port 8000)</span>
+        </div>
+        <div class="user-session-info" style="margin-top: 4px; font-size: 10px; color: #555;">
+          <span>👤 Phiên: </span><span id="client-user-badge" class="badge badge-gray" style="font-size: 9px; padding: 1px 4px;">usr_init</span>
+          <span style="color:#16a34a; font-weight:700;">• Riêng tư</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN CHAT AREA ================= -->
+    <main class="chat-main">
+      <!-- Top Navigation Bar -->
+      <header class="chat-header">
+        <div class="header-left">
+          <div class="chat-title-wrapper">
+            <h1 id="active-chat-title">Cuộc trò chuyện mới</h1>
+            <button id="btn-edit-title" class="btn-icon" title="Đổi tên">✏️</button>
+          </div>
+          <div class="header-meta">
+            <span id="active-mode-badge" class="badge badge-blue">API Mode</span>
+            <span id="active-model-badge" class="badge badge-yellow">Qwen3.6-27B</span>
+            <span id="active-rag-badge" class="badge badge-green">RAG Enabled</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="btn-delete-chat" class="btn btn-outline btn-sm text-danger" title="Xóa đoạn chat này">
+            🗑️ Xóa Chat
+          </button>
+        </div>
+      </header>
+
+      <!-- Message History View -->
+      <div id="messages-container" class="messages-container">
+        <!-- Messages will be injected here -->
+      </div>
+
+      <!-- Bottom Chat Input -->
+      <footer class="chat-input-area">
+        <!-- Quick Prompts Chips -->
+        <div class="quick-prompts">
+          <span class="prompt-chip" data-prompt="Tìm các bãi biển lướt sóng nổi tiếng nhất ở Cornwall?">🏄 Bãi biển lướt sóng Cornwall</span>
+          <span class="prompt-chip" data-prompt="Thời tiết tại Newquay hiện tại ra sao?">🌦️ Thời tiết Newquay</span>
+          <span class="prompt-chip" data-prompt="Tìm khách sạn nghỉ dưỡng gia đình tốt nhất ở Newquay và kiểm tra thời tiết ở đó?">🏨 Khách sạn + Thời tiết</span>
+          <span class="prompt-chip" data-prompt="Giải thích kiến trúc RAG với ChromaDB hoạt động như thế nào?">📖 RAG Architecture</span>
+        </div>
+
+        <!-- Input Box -->
+        <div class="input-box-wrapper">
+          <textarea id="input-message" class="chat-textarea" placeholder="Nhập tin nhắn cho Trợ lý AI (Enter để gửi, Shift+Enter xuống dòng)..." rows="1"></textarea>
+          <button id="btn-send" class="btn btn-primary btn-send">
+            <span>GỬI</span>
+            <span class="send-icon">➤</span>
+          </button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

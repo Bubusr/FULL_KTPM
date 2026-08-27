@@ -1,0 +1,254 @@
+{
+  "chats": [
+    {
+      "id": "chat-459b2615",
+      "title": "Thời tiết hiện tại ở London, Vương...",
+      "model": "Qwen3.6-27B",
+      "mode": "api",
+      "created_at": "2026-08-27T02:28:28.528350",
+      "updated_at": "2026-08-27T02:28:36.165108",
+      "messages": [
+        {
+          "id": "msg-00c07f",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T02:28:28.528350"
+        },
+        {
+          "id": "msg-7485c6",
+          "role": "user",
+          "content": "Dự báo thời tiết hôm nay ở London",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T02:28:28.532356"
+        },
+        {
+          "id": "msg-21db72",
+          "role": "assistant",
+          "content": "Thời tiết hiện tại ở London, Vương quốc Anh:\n- Nhiệt độ: 23.1°C\n- Tình trạng: Nắng/Rõ ràng\n- Tốc độ gió: 14.8 km/h\n\nNếu bạn cần thêm thông tin, hãy cho tôi biết! 😊",
+          "model": "Qwen3.6-27B",
+          "tools_used": [
+            {
+              "tool": "instant_real_weather",
+              "input": {
+                "town": "London"
+              },
+              "output": "Real-time Live Weather in London, United Kingdom: Temperature: 23.1°C, Condition: Sunny/Clear, Wind Speed: 14.8 km/h."
+            }
+          ],
+          "timestamp": "2026-08-27T02:28:36.165108"
+        }
+      ]
+    },
+    {
+      "id": "chat-70d98052",
+      "title": "Thời tiết hiện tại tại Newquay,...",
+      "model": "llama-3.3-70b",
+      "mode": "g4f",
+      "created_at": "2026-08-27T02:29:28.474423",
+      "updated_at": "2026-08-27T02:45:10.257140",
+      "messages": [
+        {
+          "id": "msg-abd5a2",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T02:29:28.474423"
+        },
+        {
+          "id": "msg-4f6051",
+          "role": "user",
+          "content": "Thời tiết tại Newquay hiện tại ra sao?",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T02:29:31.720865"
+        },
+        {
+          "id": "msg-e65359",
+          "role": "assistant",
+          "content": "Thời tiết hiện tại tại Newquay, Vương quốc Anh:  \n- Nhiệt độ: 19.4°C  \n- Tình trạng: Có mây một phần  \n- Tốc độ gió: 10.8 km/h",
+          "model": "Qwen3.6-27B",
+          "tools_used": [
+            {
+              "tool": "instant_real_weather",
+              "input": {
+                "town": "Newquay"
+              },
+              "output": "Real-time Live Weather in Newquay, United Kingdom: Temperature: 19.4°C, Condition: Partly Cloudy, Wind Speed: 10.8 km/h."
+            }
+          ],
+          "timestamp": "2026-08-27T02:29:38.064714"
+        },
+        {
+          "id": "msg-eb87d8",
+          "role": "user",
+          "content": "Thời tiết tại Newquay hiện tại ra sao?",
+          "model": "llama-3.3-70b",
+          "tools_used": [],
+          "timestamp": "2026-08-27T02:44:34.713815"
+        },
+        {
+          "id": "msg-2590d0",
+          "role": "assistant",
+          "content": "Thời tiết hiện tại tại Newquay, Vương quốc Anh là:\n\n- Nhiệt độ: 19,4 độ C\n- Tình trạng thời tiết: Có mây một phần\n- Tốc độ gió: 10,4 km/h\n\nVới điều kiện thời tiết như trên, Newquay hiện đang có một ngày khá dễ chịu với nhiệt độ ấm và có một ít mây. Điều này tạo điều kiện thuận lợi cho các hoạt động ngoài trời như lướt sóng, đi dạo ven biển hoặc tham gia vào các môn thể thao khác tại các bãi biển nổi tiếng như Fistral Beach và Towan Beach.\n\nNếu bạn đang lên kế hoạch cho một chuyến đi đến Newquay, hãy nhớ kiểm tra dự báo thời tiết thường xuyên để có thông tin cập nhật nhất và chuẩn bị cho chuyến đi của mình một cách tốt nhất.",
+          "model": "llama-3.3-70b",
+          "tools_used": [
+            {
+              "tool": "search_travel_info (ChromaDB RAG)",
+              "input": {
+                "query": "Thời tiết tại Newquay hiện tại ra sao?"
+              },
+              "output": "Cornwall is a county in South West England.\n        Newquay is known as the UK's surfing capital with popular beaches like Fistral Beach and Towan Beach.\n        It offers great surfing schools, lively nightlife, and scenic coastal walks.\n---\nSt Ives is a picturesque seaside town in Cornwall.\n        It features beautiful sandy beaches such as Porthmeor Beach, art galleries including the Tate St I..."
+            },
+            {
+              "tool": "instant_real_weather (Open-Meteo Free API)",
+              "input": {
+                "town": "Newquay"
+              },
+              "output": "Real-time Live Weather in Newquay, United Kingdom: Temperature: 19.4°C, Condition: Partly Cloudy, Wind Speed: 10.4 km/h."
+            }
+          ],
+          "timestamp": "2026-08-27T02:45:10.257140"
+        }
+      ]
+    },
+    {
+      "id": "chat-787517d6",
+      "user_id": "user_alice",
+      "title": "Alice says hi",
+      "model": "Qwen3.6-27B",
+      "mode": "api",
+      "created_at": "2026-08-27T16:12:26.938539",
+      "updated_at": "2026-08-27T16:12:26.941915",
+      "messages": [
+        {
+          "id": "msg-f4b785",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:12:26.938539"
+        },
+        {
+          "id": "msg-c82c7f",
+          "role": "user",
+          "content": "Alice says hi",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:12:26.941915"
+        }
+      ]
+    },
+    {
+      "id": "chat-49849406",
+      "user_id": "user_bob",
+      "title": "Bob asks for weather",
+      "model": "Qwen3.6-27B",
+      "mode": "api",
+      "created_at": "2026-08-27T16:12:26.942775",
+      "updated_at": "2026-08-27T16:12:26.943371",
+      "messages": [
+        {
+          "id": "msg-6e809c",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:12:26.942775"
+        },
+        {
+          "id": "msg-b58a99",
+          "role": "user",
+          "content": "Bob asks for weather",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:12:26.943371"
+        }
+      ]
+    },
+    {
+      "id": "chat-e04bb3cf",
+      "user_id": "usr_6ysj6y7",
+      "title": "Hội thoại #1",
+      "model": "Qwen3.6-27B",
+      "mode": "api",
+      "created_at": "2026-08-27T16:32:08.413821",
+      "updated_at": "2026-08-27T16:32:08.413821",
+      "messages": [
+        {
+          "id": "msg-1028e5",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:32:08.413821"
+        }
+      ]
+    },
+    {
+      "id": "chat-b62942bb",
+      "user_id": "usr_7omyri3",
+      "title": "Dựa trên thông tin tìm kiếm, dưới...",
+      "model": "Qwen3.6-27B",
+      "mode": "api",
+      "created_at": "2026-08-27T16:32:36.688308",
+      "updated_at": "2026-08-27T16:33:14.352239",
+      "messages": [
+        {
+          "id": "msg-dab40b",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:32:36.688308"
+        },
+        {
+          "id": "msg-7f259c",
+          "role": "user",
+          "content": "Tìm các bãi biển lướt sóng nổi tiếng nhất ở Cornwall?",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:32:40.070550"
+        },
+        {
+          "id": "msg-ea5bb7",
+          "role": "assistant",
+          "content": "Dựa trên thông tin tìm kiếm, dưới đây là những bãi biển lướt sóng nổi tiếng nhất tại Cornwall, Anh:\n\n### 1. Newquay - \"Thủ đô lướt sóng của Vương quốc Anh\"\nNewquay được coi là điểm đến hàng đầu cho người yêu thích lướt sóng tại Cornwall và cả nước Anh.\n*   **Fistral Beach:** Đây là bãi biển nổi tiếng nhất, nổi tiếng với những con sóng mạnh mẽ và phù hợp cho nhiều cấp độ khác nhau, từ người mới bắt đầu đến người có kinh nghiệm.\n*   **Towan Beach:** Nằm ngay trung tâm thành phố, đây là một lựa chọn tuyệt vời cho những người mới học lướt sóng nhờ địa hình tương đối bằng phẳng và an toàn hơn.\n*   **Tiện ích:** Newquay có nhiều trường dạy lướt sóng uy tín, cuộc sống về đêm sôi động và các con đường ven biển tuyệt đẹp để tham quan.\n\n### 2. St Ives\nMặc dù nổi tiếng hơn với khung cảnh thơ mộng và các phòng trưng bày nghệ thuật, St Ives cũng có những bãi biển phù hợp cho lướt sóng.\n*   **Porthmeor Beach:** Bãi biển cát đẹp này có thể cung cấp những con sóng tốt, đặc biệt là vào mùa đông khi sóng lớn hơn.\n*   **Điểm nhấn khác:** Bạn có thể kết hợp lướt sóng với việc tham quan Tate St Ives (một phân馆 của Tate Gallery London) và khám phá những con phố lát đá cổ kính với các cửa hàng độc lập.\n\n### 3. Falmouth\nNằm ở bờ biển phía nam Cornwall, Falmouth mang đến trải nghiệm lướt sóng kết hợp với vẻ đẹp của cảng biển.\n*   **Gyllyngvase Beach:** Một bãi biển dài và đẹp, thường có sóng phù hợp cho lướt sóng, đặc biệt là khi có gió mạnh từ phía tây nam.\n*   **Điểm nhấn khác:** Falmouth có cộng đồng thủy thủ sôi động, Bảo tàng Hàng hải Quốc gia và Lâu đài Pendennis nhìn xuống cảng. Bạn cũng có thể thưởng thức hải sản tươi ngon tại đây.\n\n### Lời khuyên thêm:\n*   **Thời điểm tốt nhất:** Mùa thu và mùa đông thường có sóng lớn hơn và phù hợp hơn cho lướt sóng nâng cao, trong khi mùa hè có sóng nhỏ hơn, phù hợp cho người mới bắt đầu.\n*   **Trang bị:** Cornwall có thể lạnh, đặc biệt là vào mùa lạnh, vì vậy bạn nên chuẩn bị đồ bảo hộ phù hợp (wetsuit dày).\n\nNếu bạn cần thông tin chi tiết hơn về thời tiết hoặc các điểm tham quan cụ thể, hãy cho tôi biết nhé!",
+          "model": "Qwen3.6-27B",
+          "tools_used": [
+            {
+              "tool": "search_travel_info",
+              "input": {
+                "query": "bãi biển lướt sóng nổi tiếng nhất ở Cornwall"
+              },
+              "output": "Cornwall is a county in South West England.\n        Newquay is known as the UK's surfing capital with popular beaches like Fistral Beach and Towan Beach.\n        It offers great surfing schools, lively nightlife, and scenic coastal walks.\n---\nSt Ives is a picturesque seaside town in Cornwall.\n        It features beautiful sandy beaches such as Porthmeor Beach, art galleries including the Tate St Ives,\n        and charming narrow cobbled streets with independent shops.\n---\nFalmouth is located on the south coast of Cornwall.\n        It features Gyllyngvase Beach, the National Maritime Museum, an"
+            }
+          ],
+          "timestamp": "2026-08-27T16:33:14.352239"
+        }
+      ]
+    },
+    {
+      "id": "chat-061009f4",
+      "user_id": "usr_7omyri3",
+      "title": "Hội thoại #2",
+      "model": "Qwen3.6-27B",
+      "mode": "api",
+      "created_at": "2026-08-27T16:32:42.797204",
+      "updated_at": "2026-08-27T16:32:42.797204",
+      "messages": [
+        {
+          "id": "msg-5bcbf8",
+          "role": "assistant",
+          "content": "Xin chào! Tôi là Trợ lý AI Du lịch & Kiến trúc KTPM. Bạn có thể hỏi tôi về thông tin du lịch Cornwall (tra cứu RAG ChromaDB), dự báo thời tiết, hoặc chọn các mô hình AI khác nhau ở thanh bên trái.",
+          "model": "Qwen3.6-27B",
+          "tools_used": [],
+          "timestamp": "2026-08-27T16:32:42.797204"
+        }
+      ]
+    }
+  ]
+}

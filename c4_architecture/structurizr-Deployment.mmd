@@ -1,0 +1,63 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio & Cornwall RAG Platform - Deployment - Production"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 64 ["Client Tier (Thiết bị người dùng)"]
+      style 64 fill:#ffffff,stroke:#888888,color:#000000
+
+      subgraph 65 ["Web Browser Environment"]
+        style 65 fill:#ffffff,stroke:#888888,color:#000000
+
+        66["<div style='font-weight: bold'>Web Frontend (Single Page Application)</div><div style='font-size: 70%; margin-top: 0px'>[Container: HTML5 / Vanilla CSS / Vanilla JS]</div><div style='font-size: 80%; margin-top:10px'>Giao diện người dùng<br />Neo-Brutalist Light Theme,<br />quản lý trạng thái phiên độc<br />lập</div>"]
+        style 66 fill:#38bdf8,stroke:#2784ad,color:#0f172a
+      end
+
+    end
+
+    subgraph 67 ["Application Server Tier (Máy chủ AI Agents)"]
+      style 67 fill:#ffffff,stroke:#888888,color:#000000
+
+      subgraph 68 ["Python Runtime (:8000)"]
+        style 68 fill:#ffffff,stroke:#888888,color:#000000
+
+        69["<div style='font-weight: bold'>FastAPI Backend & Agent Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / FastAPI / Uvicorn]</div><div style='font-size: 80%; margin-top:10px'>Máy chủ REST API tiếp nhận<br />yêu cầu, phân tách phiên đa<br />người dùng và điều phối tác<br />tử</div>"]
+        style 69 fill:#0369a1,stroke:#024970,color:#ffffff
+        71["<div style='font-weight: bold'>LangGraph ReAct Agent Runtime</div><div style='font-size: 70%; margin-top: 0px'>[Container: LangGraph / LangChain]</div><div style='font-size: 80%; margin-top:10px'>Bộ não điều phối chu trình<br />Reasoning + Acting có kiểm<br />soát số bước và bộ nhớ</div>"]
+        style 71 fill:#7c3aed,stroke:#5628a5,color:#ffffff
+        73["<div style='font-weight: bold'>Cornwall RAG Core Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: LangChain / HuggingFace]</div><div style='font-size: 80%; margin-top:10px'>Hệ thống nạp, cắt đoạn và<br />truy vấn tri thức du lịch<br />Cornwall</div>"]
+        style 73 fill:#059669,stroke:#036949,color:#ffffff
+        75["<div style='font-weight: bold'>Weather Forecast Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / REST Client]</div><div style='font-size: 80%; margin-top:10px'>Dịch vụ tích hợp dự báo thời<br />tiết thời gian thực và dữ<br />liệu giả lập</div>"]
+        style 75 fill:#d97706,stroke:#975304,color:#ffffff
+      end
+
+      subgraph 77 ["Private Storage Tier"]
+        style 77 fill:#ffffff,stroke:#888888,color:#000000
+
+        78[("<div style='font-weight: bold'>ChromaDB Vector Store</div><div style='font-size: 70%; margin-top: 0px'>[Container: ChromaDB / SQLite (./chroma_db)]</div><div style='font-size: 80%; margin-top:10px'>CSDL vector lưu trữ bền vững<br />384-dim embeddings và<br />metadata tài liệu Cornwall</div>")]
+        style 78 fill:#0f766e,stroke:#0a524d,color:#ffffff
+        80[("<div style='font-weight: bold'>Local Chat JSON Store</div><div style='font-size: 70%; margin-top: 0px'>[Container: Local File Storage (./chats)]</div><div style='font-size: 80%; margin-top:10px'>Lưu trữ lịch sử phiên hội<br />thoại đa người dùng cô lập<br />dưới dạng file JSON</div>")]
+        style 80 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      end
+
+    end
+
+    subgraph 82 ["External Cloud Tier (Dịch vụ đám mây)"]
+      style 82 fill:#ffffff,stroke:#888888,color:#000000
+
+      83["<div style='font-weight: bold'>Open-Meteo Live Weather API</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Dịch vụ cung cấp dữ liệu dự<br />báo thời tiết toàn cầu miễn<br />phí</div>"]
+      style 83 fill:#64748b,stroke:#465161,color:#ffffff
+      85["<div style='font-weight: bold'>HCMUS FIT AI Server / Cloud LLM</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Mô hình ngôn ngữ lớn xử lý<br />suy luận (Qwen3.6-27B /<br />GPT-4o)</div>"]
+      style 85 fill:#64748b,stroke:#465161,color:#ffffff
+    end
+
+    66-. "<div>Gửi POST<br />/api/chats/{id}/messages kèm<br />header X-User-Id</div><div style='font-size: 70%'>[JSON / REST API]</div>" .->69
+    69-. "<div>Kích hoạt ReAct Agent với tin<br />nhắn mới</div><div style='font-size: 70%'>[Python Call]</div>" .->71
+    71-. "<div>Thực thi<br />search_travel_info(query)</div><div style='font-size: 70%'>[Python Call]</div>" .->73
+    71-. "<div>Thực thi<br />get_weather_info(city)</div><div style='font-size: 70%'>[Python Call]</div>" .->75
+    73-. "<div>Ghi vector 384 chiều vào chỉ<br />mục HNSW</div><div style='font-size: 70%'>[SQLite / Vector Write]</div>" .->78
+    69-. "<div>Đọc/Ghi dữ liệu phiên chat cô<br />lập theo user_id</div><div style='font-size: 70%'>[File I/O (JSON)]</div>" .->80
+    75-. "<div>Truy vấn nhiệt độ và thời<br />tiết theo tọa độ địa lý</div><div style='font-size: 70%'>[HTTPS / REST API]</div>" .->83
+    71-. "<div>Gửi ReAct Prompt<br />(Thoughts/Actions) để suy<br />luận</div><div style='font-size: 70%'>[HTTPS / OpenAI Protocol]</div>" .->85
+  end

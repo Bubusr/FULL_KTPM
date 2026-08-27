@@ -1,0 +1,25 @@
+title: "KTPM — JAMstack Studio"
+description: "Trang web kiến trúc JAMstack (JavaScript, APIs, Markup) - Môn Kiến trúc Phần mềm"
+baseurl: "/my-website"
+url: "https://bubusr.github.io"
+author:
+  name: "Nhóm KTPM Lab"
+  github: "Bubusr"
+
+# Cấu hình Markdown engine
+markdown: kramdown
+highlighter: rouge
+permalink: /:basename:output_ext
+
+# Tự động gán layout default cho tất cả các file markdown
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Loại trừ các file/thư mục không cần build trên GitHub Pages
+exclude:
+  - README.md
+  - .git
+  - serve.py

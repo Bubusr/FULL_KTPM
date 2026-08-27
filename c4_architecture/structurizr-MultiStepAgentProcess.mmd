@@ -1,0 +1,50 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio & Cornwall RAG Platform - Dynamic"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 2 ["AI Agents Studio & Cornwall RAG Platform"]
+      style 2 fill:#ffffff,stroke:#015c8b,color:#015c8b
+
+      11["<div style='font-weight: bold'>LangGraph ReAct Agent Runtime</div><div style='font-size: 70%; margin-top: 0px'>[Container: LangGraph / LangChain]</div><div style='font-size: 80%; margin-top:10px'>Bộ não điều phối chu trình<br />Reasoning + Acting có kiểm<br />soát số bước và bộ nhớ</div>"]
+      style 11 fill:#7c3aed,stroke:#5628a5,color:#ffffff
+      16["<div style='font-weight: bold'>Cornwall RAG Core Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: LangChain / HuggingFace]</div><div style='font-size: 80%; margin-top:10px'>Hệ thống nạp, cắt đoạn và<br />truy vấn tri thức du lịch<br />Cornwall</div>"]
+      style 16 fill:#059669,stroke:#036949,color:#ffffff
+      20["<div style='font-weight: bold'>Weather Forecast Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / REST Client]</div><div style='font-size: 80%; margin-top:10px'>Dịch vụ tích hợp dự báo thời<br />tiết thời gian thực và dữ<br />liệu giả lập</div>"]
+      style 20 fill:#d97706,stroke:#975304,color:#ffffff
+      23[("<div style='font-weight: bold'>ChromaDB Vector Store</div><div style='font-size: 70%; margin-top: 0px'>[Container: ChromaDB / SQLite (./chroma_db)]</div><div style='font-size: 80%; margin-top:10px'>CSDL vector lưu trữ bền vững<br />384-dim embeddings và<br />metadata tài liệu Cornwall</div>")]
+      style 23 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      24[("<div style='font-weight: bold'>Local Chat JSON Store</div><div style='font-size: 70%; margin-top: 0px'>[Container: Local File Storage (./chats)]</div><div style='font-size: 80%; margin-top:10px'>Lưu trữ lịch sử phiên hội<br />thoại đa người dùng cô lập<br />dưới dạng file JSON</div>")]
+      style 24 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      3["<div style='font-weight: bold'>Web Frontend (Single Page Application)</div><div style='font-size: 70%; margin-top: 0px'>[Container: HTML5 / Vanilla CSS / Vanilla JS]</div><div style='font-size: 80%; margin-top:10px'>Giao diện người dùng<br />Neo-Brutalist Light Theme,<br />quản lý trạng thái phiên độc<br />lập</div>"]
+      style 3 fill:#38bdf8,stroke:#2784ad,color:#0f172a
+      7["<div style='font-weight: bold'>FastAPI Backend & Agent Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / FastAPI / Uvicorn]</div><div style='font-size: 80%; margin-top:10px'>Máy chủ REST API tiếp nhận<br />yêu cầu, phân tách phiên đa<br />người dùng và điều phối tác<br />tử</div>"]
+      style 7 fill:#0369a1,stroke:#024970,color:#ffffff
+    end
+
+    1["<div style='font-weight: bold'>Người dùng (User / Tourist)</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Truy cập giao diện Web Studio<br />để tra cứu cẩm nang du lịch<br />và thời tiết Cornwall qua hội<br />thoại tự nhiên</div>"]
+    style 1 fill:#0f172a,stroke:#0a101d,color:#ffffff
+    25["<div style='font-weight: bold'>Open-Meteo Live Weather API</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Dịch vụ cung cấp dữ liệu dự<br />báo thời tiết toàn cầu miễn<br />phí</div>"]
+    style 25 fill:#64748b,stroke:#465161,color:#ffffff
+    26["<div style='font-weight: bold'>HCMUS FIT AI Server / Cloud LLM</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Mô hình ngôn ngữ lớn xử lý<br />suy luận (Qwen3.6-27B /<br />GPT-4o)</div>"]
+    style 26 fill:#64748b,stroke:#465161,color:#ffffff
+
+    1-. "<div>1. 1. Nhập câu hỏi: 'Tôi muốn<br />lướt sóng ở Cornwall, thời<br />tiết thế nào?'</div><div style='font-size: 70%'>[HTTPS / Web UI]</div>" .->3
+    3-. "<div>2. 2. POST<br />/api/chats/1/messages kèm<br />header X-User-Id</div><div style='font-size: 70%'>[JSON / REST API]</div>" .->7
+    7-. "<div>3. 3. Kích hoạt LangGraph<br />ReAct Agent</div><div style='font-size: 70%'>[Python Call]</div>" .->11
+    11-. "<div>4. 4. Gọi tool<br />search_travel_info('Cornwall<br />surfing')</div><div style='font-size: 70%'>[Python Call]</div>" .->16
+    16-. "<div>5. 5. Tìm kiếm Top-3 Cosine<br />Similarity Chunks</div><div style='font-size: 70%'>[SQLite / Vector Write]</div>" .->23
+    23-. "<div>6. 6. Trả về thông tin bãi<br />biển Newquay</div><div style='font-size: 70%'>[SQLite / Vector Write]</div>" .->16
+    16-. "<div>7. 7. Trả về Observation cho<br />LLM Brain</div><div style='font-size: 70%'>[Python Call]</div>" .->11
+    11-. "<div>8. 8. Gọi tool<br />get_weather_info(city='Newquay')</div><div style='font-size: 70%'>[Python Call]</div>" .->20
+    20-. "<div>9. 9. Truy vấn REST API thời<br />tiết Newquay</div><div style='font-size: 70%'>[HTTPS / REST API]</div>" .->25
+    25-. "<div>10. 10. Trả về: 18°C, Nắng<br />đẹp, Sóng biển 1.8m</div><div style='font-size: 70%'>[HTTPS / REST API]</div>" .->20
+    20-. "<div>11. 11. Trả về Observation<br />thời tiết</div><div style='font-size: 70%'>[Python Call]</div>" .->11
+    11-. "<div>12. 12. Gửi tổng hợp toàn bộ<br />Context & Observation</div><div style='font-size: 70%'>[HTTPS / OpenAI Protocol]</div>" .->26
+    26-. "<div>13. 13. Sinh câu trả lời hoàn<br />chỉnh kèm trích dẫn nguồn</div><div style='font-size: 70%'>[HTTPS / OpenAI Protocol]</div>" .->11
+    11-. "<div>14. 14. Trả về Final Answer</div><div style='font-size: 70%'>[Python Call]</div>" .->7
+    7-. "<div>15. 15. Lưu vết hội thoại vào<br />JSON file</div><div style='font-size: 70%'>[File I/O (JSON)]</div>" .->24
+    7-. "<div>16. 16. Phản hồi JSON kết quả<br />cho Client</div><div style='font-size: 70%'>[JSON / REST API]</div>" .->3
+    3-. "<div>17. 17. Render câu trả lời<br />giao diện đẹp mắt</div><div style='font-size: 70%'>[HTTPS / Web UI]</div>" .->1
+  end

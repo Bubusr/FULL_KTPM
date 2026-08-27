@@ -1,0 +1,43 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - LLM Engine Router - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    8["<div style='font-weight: bold'>FastAPI Backend Server</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / FastAPI 0.115 / Uvicorn (web/server.py)]</div><div style='font-size: 80%; margin-top:10px'>REST API gateway duy nhất.<br />Tiếp nhận request, phân tách<br />phiên người dùng qua<br />X-User-Id header, điều phối<br />ChatStore và LLMEngine</div>"]
+    style 8 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    27["<div style='font-weight: bold'>LangGraph ReAct Agent</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangGraph / LangChain (tasks/main_03_01.py)]</div><div style='font-size: 80%; margin-top:10px'>Đồ thị suy luận tuần tự: LLM<br />Node ↔ ToolNode. Sử dụng<br />RemainingSteps để chống vòng<br />lặp vô tận (max 10 bước).<br />MemorySaver persist trạng<br />thái theo thread_id</div>"]
+    style 27 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    33["<div style='font-weight: bold'>RAG Travel Tools Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangChain / HuggingFace (tools/travel.py)]</div><div style='font-size: 80%; margin-top:10px'>Thư viện công cụ truy vấn tri<br />thức Cornwall. Lazy-init: chỉ<br />load ChromaDB và embedding<br />model lần đầu gọi, cache<br />global để tái sử dụng</div>"]
+    style 33 fill:#065f46,stroke:#044231,color:#ffffff
+    40["<div style='font-weight: bold'>Weather Tools Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / requests / LangChain (tools/weather.py)]</div><div style='font-size: 80%; margin-top:10px'>3 tool weather: Mock random<br />(offline), Open-Meteo<br />real-time (no key),<br />OpenWeatherMap (cần key,<br />fallback về Open-Meteo)</div>"]
+    style 40 fill:#92400e,stroke:#662c09,color:#ffffff
+
+    subgraph 20 ["LLM Engine Router"]
+      style 20 fill:#ffffff,stroke:#7d3a06,color:#7d3a06
+
+      21["<div style='font-weight: bold'>MODELS_CONFIG dict</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python dict (llm_engine.py:22-83)]</div><div style='font-size: 80%; margin-top:10px'>Định nghĩa tĩnh 4 model API<br />(Qwen3.6-27B, gpt-4o,<br />gpt-4o-mini, gpt-3.5-turbo)<br />và 4 model G4F<br />(llama-3.3-70b, llama-3.1-8b,<br />command-r, deepseek-r1) với<br />badge và description</div>"]
+      style 21 fill:#e5e7eb,stroke:#a0a1a4,color:#1f2937
+      22["<div style='font-weight: bold'>check_model_health(model_id, mode)</div><div style='font-size: 70%; margin-top: 0px'>[Component: LLMEngine.check_model_health (llm_engine.py:94)]</div><div style='font-size: 80%; margin-top:10px'>Ping model bằng<br />llm.invoke('ping') với<br />timeout 6s. Phân loại:<br />active(200) / not_found(404)<br />/ quota_exceeded(429) /<br />error(500). Tính latency_ms</div>"]
+      style 22 fill:#fed7aa,stroke:#b19676,color:#7c2d12
+      23["<div style='font-weight: bold'>process_chat(chat_id, user_message, history, model_id, mode, enable_rag, enable_weather)</div><div style='font-size: 70%; margin-top: 0px'>[Component: LLMEngine.process_chat (llm_engine.py:211)]</div><div style='font-size: 80%; margin-top:10px'>Entry point điều phối. Xây<br />danh sách available_tools<br />theo<br />enable_rag/enable_weather.<br />Fork sang _process_api_mode<br />hoặc _process_g4f_mode</div>"]
+      style 23 fill:#fed7aa,stroke:#b19676,color:#7c2d12
+      24["<div style='font-weight: bold'>_process_api_mode(chat_id, user_message, model_id, tools)</div><div style='font-size: 70%; margin-top: 0px'>[Component: LLMEngine._process_api_mode (llm_engine.py:250)]</div><div style='font-size: 80%; margin-top:10px'>Khởi tạo ChatOpenAI →<br />create_react_agent với<br />MemorySaver checkpointer →<br />invoke với thread_id scoped →<br />parse tool_calls và<br />ToolMessage → fallback sang<br />llm.invoke() nếu agent fail</div>"]
+      style 24 fill:#fed7aa,stroke:#b19676,color:#7c2d12
+      25["<div style='font-weight: bold'>_process_g4f_mode(user_message, history, model_id, enable_rag, enable_weather)</div><div style='font-size: 70%; margin-top: 0px'>[Component: LLMEngine._process_g4f_mode (llm_engine.py:326)]</div><div style='font-size: 80%; margin-top:10px'>Keyword-based RAG/Weather<br />trigger (cornwall_keywords,<br />weather_keywords). Gọi tools<br />thủ công → augment prompt →<br />G4F Client → fallback sang<br />Qwen3.6-27B qua API</div>"]
+      style 25 fill:#fed7aa,stroke:#b19676,color:#7c2d12
+      26["<div style='font-weight: bold'>MemorySaver Checkpointer (global)</div><div style='font-size: 70%; margin-top: 0px'>[Component: langgraph.checkpoint.memory.MemorySaver (llm_engine.py:86)]</div><div style='font-size: 80%; margin-top:10px'>Singleton MemorySaver duy<br />nhất toàn process. Lưu trạng<br />thái LangGraph graph theo key<br />thread_id='{user_id}_{chat_id}'.<br />Cô lập hoàn toàn giữa các<br />người dùng</div>"]
+      style 26 fill:#fce7f3,stroke:#b0a1aa,color:#831843
+    end
+
+    25-. "<div>Keyword-triggered RAG call</div><div style='font-size: 70%'>[Python direct invoke]</div>" .->33
+    25-. "<div>Keyword-triggered weather<br />call</div><div style='font-size: 70%'>[Python direct invoke]</div>" .->40
+    27-. "<div>ToolNode.execute(search_travel_info)</div><div style='font-size: 70%'>[LangGraph ToolNode]</div>" .->33
+    27-. "<div>ToolNode.execute(mock_weather_forecast)</div><div style='font-size: 70%'>[LangGraph ToolNode]</div>" .->40
+    8-. "<div>LLMEngine.check_model_health()</div><div style='font-size: 70%'>[Python call]</div>" .->22
+    8-. "<div>LLMEngine.process_chat(thread_id=user_id+chat_id)</div><div style='font-size: 70%'>[Python call]</div>" .->23
+    23-. "<div>mode=='api'</div><div style='font-size: 70%'>[Python branch]</div>" .->24
+    23-. "<div>mode=='g4f'</div><div style='font-size: 70%'>[Python branch]</div>" .->25
+    24-. "<div>MemorySaver.get/put(thread_id)</div><div style='font-size: 70%'>[LangGraph checkpointing]</div>" .->26
+    24-. "<div>create_react_agent.invoke()</div><div style='font-size: 70%'>[LangGraph invoke]</div>" .->27
+  end

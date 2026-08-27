@@ -1,0 +1,31 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - Weather Tools Service - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    20["<div style='font-weight: bold'>LLM Engine Router</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangChain / g4f (web/llm_engine.py)]</div><div style='font-size: 80%; margin-top:10px'>Bộ định tuyến thông minh:<br />phân loại mode API vs G4F →<br />khởi tạo ChatOpenAI hoặc G4F<br />Client → tích hợp RAG+Weather<br />tools → fallback khi lỗi</div>"]
+    style 20 fill:#b45309,stroke:#7d3a06,color:#ffffff
+    27["<div style='font-weight: bold'>LangGraph ReAct Agent</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangGraph / LangChain (tasks/main_03_01.py)]</div><div style='font-size: 80%; margin-top:10px'>Đồ thị suy luận tuần tự: LLM<br />Node ↔ ToolNode. Sử dụng<br />RemainingSteps để chống vòng<br />lặp vô tận (max 10 bước).<br />MemorySaver persist trạng<br />thái theo thread_id</div>"]
+    style 27 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+    47["<div style='font-weight: bold'>Open-Meteo Cloud API</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Geocoding + Weather Forecast<br />API. Free, no key required.<br />Endpoints: /v1/search<br />(geocoding) + /v1/forecast<br />(weather). Timeout<br />client-side 5s</div>"]
+    style 47 fill:#64748b,stroke:#465161,color:#ffffff
+
+    subgraph 40 ["Weather Tools Service"]
+      style 40 fill:#ffffff,stroke:#662c09,color:#662c09
+
+      41["<div style='font-weight: bold'>@tool mock_weather_forecast(town: str)</div><div style='font-size: 70%; margin-top: 0px'>[Component: WeatherForecastService (weather.py:16-36)]</div><div style='font-size: 80%; margin-top:10px'>Trả về dict ngẫu nhiên:<br />weather ∈<br />{sunny/foggy/rainy/windy},<br />temperature ∈ [18, 31]. Dùng<br />cho chế độ offline test không<br />cần internet</div>"]
+      style 41 fill:#fef9c3,stroke:#b1ae88,color:#713f12
+      42["<div style='font-weight: bold'>@tool instant_real_weather(town: str)</div><div style='font-size: 70%; margin-top: 0px'>[Component: requests.get Open-Meteo (weather.py:43-80)]</div><div style='font-size: 80%; margin-top:10px'>Bước 1: Geocoding API →<br />lat,lon. Bước 2: Open-Meteo<br />/v1/forecast →<br />current_weather. Parse<br />weathercode: 0=Sunny,<br />1-3=Partly Cloudy,<br />khác=Rainy. Timeout=5s. Hoàn<br />toàn miễn phí, không cần API<br />Key</div>"]
+      style 42 fill:#fef9c3,stroke:#b1ae88,color:#713f12
+      43["<div style='font-weight: bold'>@tool real_weather_forecast(town: str)</div><div style='font-size: 70%; margin-top: 0px'>[Component: LangChain OpenWeatherMapAPIWrapper (weather.py:87-101)]</div><div style='font-size: 80%; margin-top:10px'>Dùng OpenWeatherMapAPIWrapper<br />nếu có OPENWEATHERMAP_API_KEY<br />trong .env. Fallback tự động<br />sang instant_real_weather nếu<br />thiếu key hoặc API lỗi<br />402/quota</div>"]
+      style 43 fill:#fef9c3,stroke:#b1ae88,color:#713f12
+      44["<div style='font-weight: bold'>WeatherForecast TypedDict</div><div style='font-size: 70%; margin-top: 0px'>[Component: TypedDict (weather.py:11-14)]</div><div style='font-size: 80%; margin-top:10px'>Định nghĩa schema: town: str,<br />weather:<br />Literal['sunny','foggy','rainy','windy'],<br />temperature: int. Type-safety<br />cho mock service</div>"]
+      style 44 fill:#ecfdf5,stroke:#a5b1ab,color:#064e3b
+    end
+
+    27-. "<div>Invoke mock_weather_forecast</div><div style='font-size: 70%'>[LangChain tool]</div>" .->41
+    20-. "<div>Keyword-triggered weather<br />call</div><div style='font-size: 70%'>[Python direct invoke]</div>" .->42
+    42-. "<div>GET geocoding + forecast</div><div style='font-size: 70%'>[HTTPS]</div>" .->47
+    20-. "<div>create_react_agent + invoke</div><div style='font-size: 70%'>[LangGraph Python API]</div>" .->27
+  end

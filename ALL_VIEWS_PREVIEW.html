@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ TỔNG HỢP TOÀN BỘ SƠ ĐỒ KIẾN TRÚC KTPM (22 CÂU HỎI VẤN ĐÁP)</title>
+    <!-- Tải Mermaid.js -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --border-color: #0f172a;
+            --primary: #0284c7;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 380px;
+            background: #ffffff;
+            border-right: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 2px solid var(--border-color);
+            background: #f8fafc;
+        }
+
+        .sidebar-header h2 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .search-box {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .nav-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .topic-group-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #0284c7;
+            margin: 10px 0 4px 6px;
+        }
+
+        .nav-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            transition: all 0.15s;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .nav-item.active {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 2px 2px 0px #0284c7;
+        }
+
+        .nav-item .views-badge {
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .view-header {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 4px 4px 0px var(--border-color);
+        }
+
+        .view-header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+
+        .view-header .meta-info {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .meta-tag {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid #bae6fd;
+        }
+
+        .diagram-card {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 4px 4px 0px var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .diagram-card h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .diagram-card p.desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .mermaid-box {
+            overflow-x: auto;
+            padding: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>📘 BỘ SƠ ĐỒ KIẾN TRÚC KTPM</h2>
+            <p>Chuẩn Kruchten 4+1 View (22 Câu hỏi vấn đáp)</p>
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Tìm kiếm câu hỏi hoặc tên View..." oninput="filterQuestions()">
+        </div>
+        <div class="nav-list" id="navList">
+            <!-- Items rendered via JS -->
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="mainContent">
+        <!-- Rendered via JS -->
+    </div>
+
+    <script>
+        const QUESTIONS_DATA = [
+            // CHỦ ĐỀ 1: MICROSERVICES
+            {
+                id: 1,
+                topic: "Chủ đề 1: Microservices (Online Boutique)",
+                title: "Câu 1: Microservices - Deployment View",
+                folder: "microservices-demo/",
+                viewsList: ["Deployment View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Triển khai (Deployment View)",
+                        desc: "Triển khai 11 microservices độc lập dạng Pods trên cụm Kubernetes Cluster kèm Redis Database Tier",
+                        code: `graph TD
+    Client["Client Web Browser (HTTP/1.1 :80)"]
+    subgraph K8S["Kubernetes Cluster (Minikube / GKE Node)"]
+        Ingress["K8s Service: frontend-external / IngressGateway (:8080)"]
+        subgraph PODS["Microservices Pods Tier (Docker Containers)"]
+            FrontendPod["Pod: frontend (Go Binary Container)"]
+            CartPod["Pod: cartservice (.NET 8 Container)"]
+            CatalogPod["Pod: productcatalogservice (Go Container)"]
+            CheckoutPod["Pod: checkoutservice (Go Container)"]
+            CurrencyPod["Pod: currencyservice (Node.js Container)"]
+            PaymentPod["Pod: paymentservice (Node.js Container)"]
+            ShippingPod["Pod: shippingservice (Go Container)"]
+            EmailPod["Pod: emailservice (Python Container)"]
+            RecPod["Pod: recommendationservice (Python Container)"]
+            AdPod["Pod: adservice (Java Container)"]
+        end
+        subgraph DB["Persistence Tier Pod"]
+            RedisPod["Pod: redis-cart (Redis Container :6379)"]
+        end
+    end
+    Client -->|HTTP| Ingress
+    Ingress -->|Route /| FrontendPod
+    FrontendPod -->|gRPC :7070| CartPod
+    FrontendPod -->|gRPC :3550| CatalogPod
+    FrontendPod -->|gRPC :5050| CheckoutPod
+    FrontendPod -->|gRPC :8080| RecPod
+    FrontendPod -->|gRPC :9555| AdPod
+    CheckoutPod -->|gRPC :5000| PaymentPod
+    CheckoutPod -->|gRPC :50051| ShippingPod
+    CheckoutPod -->|gRPC :5000| EmailPod
+    CheckoutPod -->|gRPC :7000| CurrencyPod
+    CartPod -->|TCP :6379| RedisPod`
+                    }
+                ]
+            },
+            {
+                id: 2,
+                topic: "Chủ đề 1: Microservices (Online Boutique)",
+                title: "Câu 2: Microservices - Logic & Process View",
+                folder: "microservices-demo/",
+                viewsList: ["Logic View", "Process View (Checkout Use Case)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View)",
+                        desc: "Phân rã nghiệp vụ thành 11 microservices độc lập giao tiếp qua giao thức gRPC/Protobuf",
+                        code: `graph LR
+    Frontend["Frontend (Go)"] -->|gRPC| Cart["CartService (.NET)"]
+    Frontend -->|gRPC| Catalog["ProductCatalog (Go)"]
+    Frontend -->|gRPC| Currency["CurrencyService (Node.js)"]
+    Frontend -->|gRPC| Checkout["CheckoutService (Go)"]
+    Frontend -->|gRPC| Rec["Recommendation (Python)"]
+    Frontend -->|gRPC| Ad["AdService (Java)"]
+    Checkout -->|gRPC| Cart
+    Checkout -->|gRPC| Catalog
+    Checkout -->|gRPC| Payment["PaymentService (Node.js)"]
+    Checkout -->|gRPC| Shipping["ShippingService (Go)"]
+    Checkout -->|gRPC| Email["EmailService (Python)"]
+    Checkout -->|gRPC| Currency
+    Cart -->|Redis Protocol| Redis[("Redis Storage")]`
+                    },
+                    {
+                        title: "2. Sơ đồ Góc nhìn Tiến trình (Process View - Use Case Đặt hàng Checkout)",
+                        desc: "Trình tự điều phối luồng giao dịch thanh toán và hoàn tất đơn hàng đa dịch vụ",
+                        code: `sequenceDiagram
+    autonumber
+    actor User as Khách hàng
+    participant FE as Frontend Service
+    participant CO as Checkout Service
+    participant CS as Cart Service
+    participant PS as Payment Service
+    participant SS as Shipping Service
+    participant ES as Email Service
+
+    User->>FE: Bấm nút 'Place Order'
+    FE->>CO: PlaceOrder(userId, address, cart, creditCard)
+    CO->>CS: GetCart(userId)
+    CS-->>CO: Trả về danh sách items
+    CO->>PS: Charge(amount, creditCard)
+    PS-->>CO: Xác nhận thanh toán thành công
+    CO->>SS: ShipOrder(address, items)
+    SS-->>CO: Trả về Tracking ID
+    CO->>CS: EmptyCart(userId)
+    CS-->>CO: Xác nhận xóa giỏ
+    CO->>ES: SendOrderConfirmation(email, order)
+    ES-->>CO: Gửi mail thành công
+    CO-->>FE: Trả về OrderResult
+    FE-->>User: Hiển thị trang hoàn tất đơn hàng`
+                    }
+                ]
+            },
+            {
+                id: 3,
+                topic: "Chủ đề 1: Microservices (Online Boutique)",
+                title: "Câu 3: Microservices - Security & Scalability View",
+                folder: "microservices-demo/",
+                viewsList: ["Security View", "Scalability View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Mở rộng (Scalability View - HPA & Horizontal Scaling)",
+                        desc: "Cơ chế co giãn tự động theo chiều ngang thông qua Kubernetes Horizontal Pod Autoscaler (HPA)",
+                        code: `graph TD
+    Traffic["Lưu lượng tải tăng cao (Users 50 -> 500)"] --> Ingress["K8s Ingress LoadBalancer"]
+    HPA["K8s HPA Controller (CPU > 70%)"] -.->|Scale-out Replicas 1 -> 5| FrontendPool
+    subgraph FrontendPool["Frontend Pods Pool (Auto-scaled)"]
+        P1["Pod: frontend-1"]
+        P2["Pod: frontend-2"]
+        P3["Pod: frontend-3"]
+    end
+    Ingress --> P1
+    Ingress --> P2
+    Ingress --> P3`
+                    }
+                ]
+            },
+            {
+                id: 4,
+                topic: "Chủ đề 1: Microservices (Online Boutique)",
+                title: "Câu 4: Microservices - Observability View",
+                folder: "microservices-demo/",
+                viewsList: ["Observability View (Logging & Tracing)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Giám sát (Observability View - OpenTelemetry & Jaeger)",
+                        desc: "Thu thập Traces phân tán và Logs tập trung từ tất cả microservices",
+                        code: `graph LR
+    subgraph Services["Microservices Tier"]
+        FE["Frontend"]
+        CO["CheckoutService"]
+        CS["CartService"]
+    end
+    FE -->|W3C TraceContext| CO
+    CO -->|W3C TraceContext| CS
+    FE -.->|OTLP gRPC :4317| Collector["OpenTelemetry Collector"]
+    CO -.->|OTLP gRPC :4317| Collector
+    CS -.->|OTLP gRPC :4317| Collector
+    Collector -->|Export Traces| Jaeger["Jaeger Tracing UI"]
+    Collector -->|Export Metrics| Prometheus["Prometheus & Grafana"]`
+                    }
+                ]
+            },
+            {
+                id: 5,
+                topic: "Chủ đề 1: Microservices (Online Boutique)",
+                title: "Câu 5: Microservices - Development & Storage View",
+                folder: "microservices-demo/",
+                viewsList: ["Development View", "Storage View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Phát triển (Development View)",
+                        desc: "Cấu trúc phân rã thư mục đa ngôn ngữ (Polyglot) độc lập mã nguồn và đóng gói CI/CD",
+                        code: `graph TD
+    Root["microservices-demo/"] --> Src["src/ (Source code)"]
+    Root --> K8s["release/kubernetes-manifests.yaml"]
+    Src --> F1["frontend/ (Go)"]
+    Src --> F2["cartservice/ (C# .NET)"]
+    Src --> F3["checkoutservice/ (Go)"]
+    Src --> F4["paymentservice/ (Node.js)"]
+    Src --> F5["emailservice/ (Python)"]
+    Src --> F6["adservice/ (Java)"]
+    Src --> Proto["protos/ (gRPC Protocol Buffers)"]`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 2: MICRO-FRONTENDS
+            {
+                id: 6,
+                topic: "Chủ đề 2: Micro-Frontends (Module Federation)",
+                title: "Câu 6: Micro-Frontends - Logic View & Quality",
+                folder: "micro-frontends/",
+                viewsList: ["Logic View", "Event Bus"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - Webpack Module Federation)",
+                        desc: "Ứng dụng Shell nạp động các Remote Micro-Frontends và giao tiếp qua Browser Event Bus",
+                        code: `graph TD
+    subgraph Browser["Trình duyệt người dùng (Host Shell SPA)"]
+        Shell["Host Shell (Container App)"]
+        EventBus["Browser Event Bus (CustomEvent: 'cart:item-added')"]
+        Shell --> HeaderMFE["Header & Nav MFE (Remote React)"]
+        Shell --> CatalogMFE["Product Catalog MFE (Remote React)"]
+        Shell --> CartMFE["Cart & Checkout MFE (Remote React)"]
+        Shell --> AssistantMFE["AI Travel Assistant MFE (Remote Vue/React)"]
+        CatalogMFE -.->|Publish Event| EventBus
+        EventBus -.->|Subscribe Event| CartMFE
+        EventBus -.->|Subscribe Event| HeaderMFE
+    end
+    subgraph CDN["Hạ tầng Máy chủ / CDN"]
+        HeaderMFE -.->|Lazy Load remoteEntry.js| S1["Server 1 (:3001)"]
+        CatalogMFE -.->|Lazy Load remoteEntry.js| S2["Server 2 (:3002)"]
+        CartMFE -.->|Lazy Load remoteEntry.js| S3["Server 3 (:3003)"]
+    end`
+                    }
+                ]
+            },
+            {
+                id: 7,
+                topic: "Chủ đề 2: Micro-Frontends (Module Federation)",
+                title: "Câu 7: Micro-Frontends - Deployment View",
+                folder: "micro-frontends/",
+                viewsList: ["Deployment View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Triển khai (Deployment View)",
+                        desc: "Triển khai độc lập các Remote MFE lên các cổng/server khác nhau mà không cần build lại Shell",
+                        code: `graph TD
+    Client["Client Browser"] -->|HTTPS| CloudFront["AWS CloudFront CDN / Ingress Gateway"]
+    CloudFront -->|/| ShellServer["Host Shell Container (:3000)"]
+    CloudFront -->|/header| HeaderServer["Header MFE Container (:3001)"]
+    CloudFront -->|/products| CatalogServer["Catalog MFE Container (:3002)"]
+    CloudFront -->|/cart| CartServer["Cart MFE Container (:3003)"]`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 3: JAMSTACK
+            {
+                id: 8,
+                topic: "Chủ đề 3: JAMstack (Jekyll SSG & CDN)",
+                title: "Câu 8: JAMstack - Logic View & Quality",
+                folder: "nhom-06/",
+                viewsList: ["Logic View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - Build Time vs Request Time)",
+                        desc: "Quá trình tiền biên dịch HTML tĩnh tại Build Time và phân phối tức thì qua GitHub Edge CDN",
+                        code: `graph LR
+    subgraph BuildTime["1. Build Time (GitHub Actions / Jekyll)"]
+        MD["Markdown Files (.md)"] --> Jekyll["Jekyll Static Site Generator"]
+        Theme["CSS & Liquid Templates"] --> Jekyll
+        Jekyll --> HTML["Static HTML/CSS Assets"]
+    end
+    subgraph EdgeCDN["2. Deploy & Distribution Tier"]
+        HTML --> CDN["GitHub Pages / Fastly Global Edge CDN"]
+    end
+    subgraph RequestTime["3. Request Time (Client Side)"]
+        User["Người dùng"] -->|HTTPS GET < 50ms| CDN
+        CDN -->|Phục vụ HTML tĩnh| User
+        User -.->|Dynamic APIs| ThirdParty["Bình luận / Tìm kiếm Client-side API"]
+    end`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 4: RAG (RETRIEVAL-AUGMENTED GENERATION)
+            {
+                id: 9,
+                topic: "Chủ đề 4: RAG Architecture (Cornwall Guide)",
+                title: "Câu 9: RAG - Logic View",
+                folder: "AI Agents/",
+                viewsList: ["Logic View (2 Giai đoạn)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - 2 Giai đoạn RAG)",
+                        desc: "Giai đoạn Ingestion (Chunking & Embeddings) và Giai đoạn Retrieval & Generation (Cosine Search & Context Injection)",
+                        code: `graph TD
+    subgraph G1["GIAI ĐOẠN 1: INGESTION PIPELINE (NẠP TRI THỨC)"]
+        Doc["Tài liệu du lịch: CORNWALL_TRAVEL_DOCS"] --> Splitter["Text Splitter (chunk_size=500, overlap=50)"]
+        Splitter --> Chunks["Text Chunks"]
+        Chunks --> EmbedModel1["HuggingFace all-MiniLM-L6-v2"]
+        EmbedModel1 --> VectorDB[("ChromaDB Vector Store (Local ./chroma_db)")]
+    end
+    subgraph G2["GIAI ĐOẠN 2: RETRIEVAL & GENERATION (TRUY VẤN & TỔNG HỢP)"]
+        User["Người dùng"] -->|Câu hỏi du lịch| API["FastAPI Endpoint /api/chats/{id}/messages"]
+        API --> Tool["search_travel_info(query)"]
+        Tool --> EmbedModel2["HuggingFace all-MiniLM-L6-v2"]
+        EmbedModel2 --> Search["ChromaDB Retriever (Top-k=3 Cosine Similarity)"]
+        VectorDB <--> Search
+        Search --> Context["Context Chunks liên quan (Newquay, surfing...)"]
+        Context --> Prompt["Xây dựng Augmented Prompt (System + Context + Query)"]
+        Prompt --> LLM["LLM Inference Engine (Qwen3.6-27B / OpenAI)"]
+        LLM --> Response["Câu trả lời chính xác, trích dẫn nguồn"]
+        Response --> User
+    end`
+                    }
+                ]
+            },
+            {
+                id: 10,
+                topic: "Chủ đề 4: RAG Architecture (Cornwall Guide)",
+                title: "Câu 10: RAG - Deployment View",
+                folder: "AI Agents/",
+                viewsList: ["Deployment View (3 Tầng Multi-User)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Triển khai (Deployment View - 3-Tier Multi-User)",
+                        desc: "Mô hình triển khai phân tầng cô lập người dùng qua X-User-Id và bảo vệ ChromaDB ở Private Tier",
+                        code: `graph TD
+    subgraph Tier1["TẦNG 1: TRÌNH DUYỆT KHÁCH HÀNG (CLIENT TIER)"]
+        Client1["Trình duyệt Client A (X-User-Id: usr_Alice)"]
+        Client2["Trình duyệt Client B (X-User-Id: usr_Bob)"]
+    end
+    subgraph Tier2["TẦNG 2: MÁY CHỦ ỨNG DỤNG BACKEND (APP SERVER TIER :8000)"]
+        FastAPI["FastAPI Web Server & API Gateway (server.py)"]
+        ChatStore["Chat Store Module (chat_store.py)"]
+        RAGModule["RAG Core Module (tools/travel.py)"]
+        FastAPI --> ChatStore
+        FastAPI --> RAGModule
+    end
+    subgraph Tier3["TẦNG 3: DỮ LIỆU & AI SUY LUẬN (DATA & INFERENCE TIER)"]
+        ChromaStore[("ChromaDB Vector Store (Private Tier ./chroma_db)")]
+        HistoryFiles[("User Session JSON Storage")]
+        LLMCloud["HCMUS FIT AI Server (Qwen3.6-27B / Cloud OpenAI API)"]
+    end
+    Client1 -->|HTTPS POST| FastAPI
+    Client2 -->|HTTPS POST| FastAPI
+    RAGModule -->|Local Query| ChromaStore
+    ChatStore -->|Read/Write File| HistoryFiles
+    RAGModule -->|HTTPS API| LLMCloud`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 5: LLM-BASED AGENT
+            {
+                id: 11,
+                topic: "Chủ đề 5: AI Agents (LangGraph ReAct)",
+                title: "Câu 11: LLM Agent - Logic View",
+                folder: "AI Agents/",
+                viewsList: ["Logic View (4 Module & ReAct Loop)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - 4 Modules & ReAct Loop)",
+                        desc: "Chu trình Reasoning + Acting có kiểm soát số bước (RemainingSteps <= 10) và lưu bộ nhớ phiên",
+                        code: `graph TD
+    User["Người dùng"] -->|Query: 'Tôi muốn lướt sóng ở Cornwall, thời tiết thế nào?'| Brain
+    subgraph AgentSystem["HỆ THỐNG LANGGRAPH REACT AGENT (tasks/main_03_01.py)"]
+        Brain["1. BRAIN / REASONING MODULE (Qwen3.6-27B LLM)<br>Phân tích mục tiêu & Sinh Action Plan"]
+        Memory["2. MEMORY MODULE (MemorySaver)<br>Quản lý Short-term & Long-term Context"]
+        Registry["3. TOOL REGISTRY<br>• search_travel_info<br>• mock_weather_forecast"]
+        Engine["4. EXECUTION ENGINE (ToolNode)<br>Thực thi hàm Tool & Thu thập Observation"]
+        
+        Brain <-->|State Checkpoint| Memory
+        Brain -->|Quyết định gọi Tool + Tham số JSON| Registry
+        Registry -->|Chuyển giao thực thi| Engine
+        Engine -->|Trả về kết quả quan sát (Observation)| Brain
+    end
+    Brain -->|Final Answer khi hoàn tất mục tiêu| User`
+                    }
+                ]
+            },
+            {
+                id: 12,
+                topic: "Chủ đề 5: AI Agents (LangGraph ReAct)",
+                title: "Câu 12: LLM Agent - Deployment View",
+                folder: "AI Agents/",
+                viewsList: ["Deployment View (Multi-Tenant Scoped)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Triển khai (Deployment View)",
+                        desc: "Triển khai dịch vụ Agent cô lập bộ nhớ theo thread_id = f'{user_id}_{chat_id}'",
+                        code: `graph TD
+    Client["Client Web Studio (Neo-Brutalist Light Theme)"] -->|REST API + X-User-Id| Server["FastAPI Agent Service (:8000)"]
+    subgraph ServerNode["Application Host Server"]
+        Server --> Graph["LangGraph ReAct Runtime"]
+        Graph --> Mem["MemorySaver (thread_id = user_chat)"]
+        Graph --> Tools["Tools Exec Engine"]
+    end
+    Tools -->|Vector Search| Chroma[("ChromaDB Vector Store")]
+    Tools -->|HTTP GET| WeatherAPI["Open-Meteo Weather Cloud"]
+    Graph -->|Inference| AIEndpoint["FIT HCMUS AI Endpoint (Qwen3.6-27B)"]`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 6: EVENT SOURCING
+            {
+                id: 13,
+                topic: "Chủ đề 6: Event Sourcing & CQRS (Ví điện tử)",
+                title: "Câu 13: Event Sourcing - Logic View",
+                folder: "EVENT-SOURCING/",
+                viewsList: ["Logic View (CQRS & Append-Only)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - Command/Query Separation)",
+                        desc: "Tách biệt luồng Ghi Command (Append-Only Event Store) và luồng Đọc Query (Left-Fold Replay State)",
+                        code: `graph TD
+    User["Người dùng"] -->|Gửi Giao dịch| CommandHandler["Command Handler (Validation)"]
+    CommandHandler -->|Ghi nối tiếp Append-Only| EventStore[("Event Store (database.json)")]
+    EventStore -->|Stream Events| EventBus["Event Bus / Projector"]
+    EventBus -->|Left-Fold Replay| ReadModel["Read Model (Account State / Balance Cache)"]
+    User -->|Truy vấn số dư / Lịch sử| QueryService["Query Service"]
+    QueryService --> ReadModel`
+                    }
+                ]
+            },
+            {
+                id: 14,
+                topic: "Chủ đề 6: Event Sourcing & CQRS (Ví điện tử)",
+                title: "Câu 14: Event Sourcing - Deployment View",
+                folder: "EVENT-SOURCING/",
+                viewsList: ["Deployment View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Triển khai (Deployment View)",
+                        desc: "Triển khai SPA React frontend, Node.js Express backend và tệp Event Store bền vững",
+                        code: `graph TD
+    Browser["Client Browser (React SPA :5173)"] -->|HTTP REST| NodeServer["Express.js Server (:3001)"]
+    subgraph HostServer["Server Runtime"]
+        NodeServer --> Engine["Event Sourcing Engine"]
+        Engine --> Store[("Event Store File: database.json")]
+    end`
+                    }
+                ]
+            },
+            {
+                id: 15,
+                topic: "Chủ đề 6: Event Sourcing & CQRS (Ví điện tử)",
+                title: "Câu 15: Event Sourcing - Process View (Xuất danh sách)",
+                folder: "EVENT-SOURCING/",
+                viewsList: ["Process View (Xuất danh sách)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Tiến trình (Process View - Xuất danh sách & Replay)",
+                        desc: "Trình tự truy vấn và tái tạo bảng hiển thị danh sách giao dịch từ chuỗi sự kiện lịch sử",
+                        code: `sequenceDiagram
+    autonumber
+    actor User as Kế toán / Người dùng
+    participant UI as Giao diện React
+    participant API as Query API Endpoint
+    participant Store as Event Store (database.json)
+    participant Replay as State Rehydrator
+
+    User->>UI: Yêu cầu 'Xem danh sách giao dịch ví'
+    UI->>API: GET /api/events?account_id=ACC01
+    API->>Store: Đọc toàn bộ sự kiện theo thứ tự version tăng dần
+    Store-->>API: Trả về [AccountCreated, MoneyDeposited, MoneyWithdrawn]
+    API->>Replay: Thực hiện Left-Fold tính toán số dư hiện tại
+    Replay-->>API: Trả về Snapshot State (Số dư: 50.000.000 VNĐ)
+    API-->>UI: Trả về JSON danh sách sự kiện kèm số dư
+    UI-->>User: Hiển thị bảng đối soát số dư chính xác 100%`
+                    }
+                ]
+            },
+            {
+                id: 16,
+                topic: "Chủ đề 6: Event Sourcing & CQRS (Ví điện tử)",
+                title: "Câu 16: Event Sourcing - Storage & State Replay",
+                folder: "EVENT-SOURCING/",
+                viewsList: ["Storage View", "Data Flow & State Replay"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Luồng dữ liệu và Tái tạo trạng thái (State Replay Data Flow)",
+                        desc: "Nguyên lý Left-Fold: S_current = Fold(E_n, ... Fold(E_2, Fold(E_1, S_0)))",
+                        code: `graph LR
+    E1["Event 1: AccountCreated (+0)"] -->|Fold| S1["State 1: Số dư 0"]
+    E2["Event 2: MoneyDeposited (+10M)"] -->|Fold| S2["State 2: Số dư 10M"]
+    E3["Event 3: MoneyWithdrawn (-3M)"] -->|Fold| S3["State 3: Số dư 7M (Hiện tại)"]`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 7: EVENT-DRIVEN ARCHITECTURE
+            {
+                id: 17,
+                topic: "Chủ đề 7: Event-Driven Architecture (Hàng đợi thông điệp)",
+                title: "Câu 17: Event-Driven - Logic View",
+                folder: "event-driven/",
+                viewsList: ["Logic View (Producer, Broker, Consumer)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - Decoupled Message Broker)",
+                        desc: "Nới lỏng liên kết giữa Producer và Consumers thông qua Message Broker và Topic Exchanges",
+                        code: `graph LR
+    Producer["Order Producer Service"] -->|Publish 'order.created'| Exchange["Topic Exchange (Message Broker)"]
+    Exchange -->|Route| Q1["Queue: Payment Processing"]
+    Exchange -->|Route| Q2["Queue: Inventory Reserve"]
+    Exchange -->|Route| Q3["Queue: Notification Service"]
+    Q1 --> C1["Payment Worker"]
+    Q2 --> C2["Inventory Worker"]
+    Q3 --> C3["Email Worker"]`
+                    }
+                ]
+            },
+            {
+                id: 18,
+                topic: "Chủ đề 7: Event-Driven Architecture (Hàng đợi thông điệp)",
+                title: "Câu 18: Event-Driven - Deployment View",
+                folder: "event-driven/",
+                viewsList: ["Deployment View"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Triển khai (Deployment View)",
+                        desc: "Triển khai cụm RabbitMQ/Kafka Cluster phân tán độc lập với các Worker Nodes",
+                        code: `graph TD
+    Client["Client App"] -->|HTTPS| WebProducer["Producer API Gateway (:8080)"]
+    subgraph BrokerCluster["Message Broker Cluster Tier"]
+        RabbitMQ["RabbitMQ / Apache Kafka Broker (:5672)"]
+    end
+    WebProducer -->|AMQP / TCP| RabbitMQ
+    subgraph WorkerTier["Consumers Worker Pool"]
+        W1["Payment Consumer Worker"]
+        W2["Inventory Consumer Worker"]
+        W3["Notification Consumer Worker"]
+    end
+    RabbitMQ -->|Push/Pull| W1
+    RabbitMQ -->|Push/Pull| W2
+    RabbitMQ -->|Push/Pull| W3`
+                    }
+                ]
+            },
+            {
+                id: 19,
+                topic: "Chủ đề 7: Event-Driven Architecture (Hàng đợi thông điệp)",
+                title: "Câu 19: Event-Driven - Process View (Validation)",
+                folder: "event-driven/",
+                viewsList: ["Process View (Validation & Ingestion)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Tiến trình (Process View - Nhập liệu & Schema Validation)",
+                        desc: "Kiểm thực Schema JSON đầu vào trước khi xác nhận 202 Accepted và phát hành sự kiện",
+                        code: `sequenceDiagram
+    autonumber
+    actor Client as Khách hàng
+    participant Gateway as API Gateway / Producer
+    participant Validator as Schema Validator (JSON Schema)
+    participant Broker as Message Broker (Exchange)
+
+    Client->>Gateway: POST /api/orders (Dữ liệu đơn hàng)
+    Gateway->>Validator: Kiểm tra tính hợp lệ của Payload
+    alt Dữ liệu HỢP LỆ
+        Validator-->>Gateway: Hợp lệ (Schema Valid)
+        Gateway->>Broker: Publish Event 'order.created'
+        Broker-->>Gateway: Broker ACK (Đã lưu vào Queue)
+        Gateway-->>Client: 202 Accepted (Kèm Order ID & correlation_id)
+    else Dữ liệu KHÔNG HỢP LỆ
+        Validator-->>Gateway: Lỗi Schema (Thiếu trường, sai kiểu)
+        Gateway-->>Client: 400 Bad Request (Chi tiết lỗi)
+    end`
+                    }
+                ]
+            },
+            {
+                id: 20,
+                topic: "Chủ đề 7: Event-Driven Architecture (Hàng đợi thông điệp)",
+                title: "Câu 20: Event-Driven - Observability View",
+                folder: "event-driven/",
+                viewsList: ["Observability View (Tracing & DLQ)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Giám sát (Observability View - Dead Letter Queue & Tracing)",
+                        desc: "Truy vết phân tán qua correlation_id và cô lập sự kiện hỏng vào Dead Letter Queue",
+                        code: `graph LR
+    Producer["Producer (Gắn correlation_id)"] --> Queue["Main Queue"]
+    Queue --> Consumer["Consumer Worker"]
+    Consumer -.->|Xử lý thất bại 3 lần (Retry Max)| DLQ["☠️ Dead Letter Queue (DLQ)"]
+    DLQ --> AdminAlert["Admin Alert & Alert Manager"]
+    Consumer -.->|Emit Trace Spans| Tracing["Jaeger / OpenTelemetry UI"]`
+                    }
+                ]
+            },
+
+            // CHỦ ĐỀ 8: LAMBDA / KAPPA ARCHITECTURE
+            {
+                id: 21,
+                topic: "Chủ đề 8: Lambda / Kappa Architecture (Big Data Analytics)",
+                title: "Câu 21: Lambda / Kappa - Logic View",
+                folder: "LAMBDA/ or BigData/",
+                viewsList: ["Logic View (Batch, Speed, Serving)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Logic (Logic View - Kiến trúc Lambda 3 Tầng)",
+                        desc: "Sự kết hợp hoàn hảo giữa Batch Layer (chính xác 100%), Speed Layer (độ trễ < 1s) và Serving Layer",
+                        code: `graph TD
+    RawData["Dòng dữ liệu thô (Raw Event Stream)"] --> BatchLayer["1. BATCH LAYER<br>• Master Dataset (Bất biến Append-Only)<br>• Tính toán định kỳ theo lô (Hadoop / Spark)"]
+    RawData --> SpeedLayer["2. SPEED LAYER<br>• Xử lý luồng thời gian thực (Apache Flink / Spark Streaming)<br>• Độ trễ cực thấp < 1 giây"]
+    BatchLayer --> BatchViews[("Batch Views (Bảng tổng hợp chính xác tuyệt đối)")]
+    SpeedLayer --> RealtimeViews[("Real-time Views (Bảng tổng hợp delta tức thì)")]
+    BatchViews --> ServingLayer["3. SERVING LAYER<br>Hợp nhất kết quả: Query = Function(BatchView, RealtimeView)"]
+    RealtimeViews --> ServingLayer
+    ServingLayer --> Dashboard["BI Dashboard / Báo cáo phân tích người dùng"]`
+                    }
+                ]
+            },
+            {
+                id: 22,
+                topic: "Chủ đề 8: Lambda / Kappa Architecture (Big Data Analytics)",
+                title: "Câu 22: Lambda / Kappa - Process View",
+                folder: "LAMBDA/ or BigData/",
+                viewsList: ["Process View (Xuất báo cáo thống kê)"],
+                diagrams: [
+                    {
+                        title: "1. Sơ đồ Góc nhìn Tiến trình (Process View - Xuất báo cáo thống kê tổng hợp)",
+                        desc: "Trình tự hợp nhất dữ liệu lịch sử từ Batch View và dữ liệu thời gian thực từ Realtime View",
+                        code: `sequenceDiagram
+    autonumber
+    actor Analyst as Chuyên viên phân tích
+    participant UI as BI Dashboard UI
+    participant Serving as Serving Layer Query Engine
+    participant BV as Batch Views (Dữ liệu đóng băng đến 00:00)
+    participant SV as Real-time Views (Dữ liệu phát sinh trong ngày)
+
+    Analyst->>UI: Yêu cầu 'Xuất báo cáo doanh thu & người dùng'
+    UI->>Serving: GET /api/analytics/summary
+    par Truy vấn song song 2 tầng
+        Serving->>BV: Lấy tổng hợp lịch sử từ Batch View
+        BV-->>Serving: Kết quả Batch (chính xác 100%)
+    and
+        Serving->>SV: Lấy số liệu mới phát sinh từ Speed View
+        SV-->>Serving: Kết quả Real-time (độ trễ < 1s)
+    end
+    Serving->>Serving: Hợp nhất (Merge): Total = Batch_Result + Realtime_Result
+    Serving-->>UI: Trả về dữ liệu báo cáo thống kê hoàn chỉnh
+    UI-->>Analyst: Hiển thị biểu đồ báo cáo và cho phép tải dữ liệu thô`
+                    }
+                ]
+            }
+        ];
+
+        let currentActiveId = 1;
+
+        function renderSidebar() {
+            const navList = document.getElementById('navList');
+            navList.innerHTML = '';
+            
+            let lastTopic = '';
+            QUESTIONS_DATA.forEach(q => {
+                if (q.topic !== lastTopic) {
+                    const groupTitle = document.createElement('div');
+                    groupTitle.className = 'topic-group-title';
+                    groupTitle.innerText = q.topic;
+                    navList.appendChild(groupTitle);
+                    lastTopic = q.topic;
+                }
+
+                const item = document.createElement('div');
+                item.className = `nav-item ${q.id === currentActiveId ? 'active' : ''}`;
+                item.id = `nav-item-${q.id}`;
+                item.onclick = () => selectQuestion(q.id);
+                item.innerHTML = `
+                    <div>${q.title}</div>
+                    <div class="views-badge">📂 ${q.viewsList.join(' • ')}</div>
+                `;
+                navList.appendChild(item);
+            });
+        }
+
+        function selectQuestion(id) {
+            currentActiveId = id;
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const activeEl = document.getElementById(`nav-item-${id}`);
+            if (activeEl) activeEl.classList.add('active');
+
+            const q = QUESTIONS_DATA.find(item => item.id === id);
+            if (!q) return;
+
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <div class="view-header">
+                    <h1>${q.title}</h1>
+                    <div class="meta-info">
+                        <span class="meta-tag">📁 Thư mục: ${q.folder}</span>
+                        <span class="meta-tag">🏛️ Góc nhìn: ${q.viewsList.join(', ')}</span>
+                    </div>
+                </div>
+                ${q.diagrams.map((d, index) => `
+                    <div class="diagram-card">
+                        <h3>📊 ${d.title}</h3>
+                        <p class="desc">${d.desc}</p>
+                        <div class="mermaid-box">
+                            <pre class="mermaid">${d.code}</pre>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+
+            mermaid.run();
+        }
+
+        function filterQuestions() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('.nav-item').forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        // Initialize Mermaid & View
+        mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+        renderSidebar();
+        selectQuestion(1);
+    </script>
+</body>
+</html>

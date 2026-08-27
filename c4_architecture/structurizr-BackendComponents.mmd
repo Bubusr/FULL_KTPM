@@ -1,0 +1,40 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - FastAPI Backend Server - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    3["<div style='font-weight: bold'>Web Frontend SPA</div><div style='font-size: 70%; margin-top: 0px'>[Container: HTML5 / Vanilla CSS / Vanilla JS]</div><div style='font-size: 80%; margin-top:10px'>Giao diện SPA Neo-Brutalist.<br />Tự sinh userId → gửi kèm<br />header X-User-Id. Không có<br />backend riêng, gọi FastAPI<br />trực tiếp qua Fetch API.</div>"]
+    style 3 fill:#0ea5e9,stroke:#0973a3,color:#0f172a
+    15["<div style='font-weight: bold'>Chat Store Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / File I/O (web/chat_store.py)]</div><div style='font-size: 80%; margin-top:10px'>Tầng persistence cho phiên<br />hội thoại. Mọi thao tác CRUD<br />đọc-ghi trực tiếp vào file<br />JSON duy nhất. Lọc theo<br />user_id để cô lập đa người<br />dùng</div>"]
+    style 15 fill:#7c3aed,stroke:#5628a5,color:#ffffff
+    20["<div style='font-weight: bold'>LLM Engine Router</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangChain / g4f (web/llm_engine.py)]</div><div style='font-size: 80%; margin-top:10px'>Bộ định tuyến thông minh:<br />phân loại mode API vs G4F →<br />khởi tạo ChatOpenAI hoặc G4F<br />Client → tích hợp RAG+Weather<br />tools → fallback khi lỗi</div>"]
+    style 20 fill:#b45309,stroke:#7d3a06,color:#ffffff
+
+    subgraph 8 ["FastAPI Backend Server"]
+      style 8 fill:#ffffff,stroke:#143697,color:#143697
+
+      10["<div style='font-weight: bold'>Health Endpoint GET /api/health</div><div style='font-size: 70%; margin-top: 0px'>[Component: FastAPI Route (server.py:49)]</div><div style='font-size: 80%; margin-top:10px'>Trả về version,<br />multi_user=True. Dùng để kiểm<br />tra server alive</div>"]
+      style 10 fill:#bbf7d0,stroke:#82ac91,color:#14532d
+      11["<div style='font-weight: bold'>Model Endpoints GET /api/models  GET /api/models/health  GET /api/models/{id}/health</div><div style='font-size: 70%; margin-top: 0px'>[Component: FastAPI Routes (server.py:53-66)]</div><div style='font-size: 80%; margin-top:10px'>Trả về MODELS_CONFIG. Ping<br />từng model bằng<br />LLMEngine.check_model_health()<br />với timeout 6s để lấy status<br />+ latency</div>"]
+      style 11 fill:#bbf7d0,stroke:#82ac91,color:#14532d
+      12["<div style='font-weight: bold'>Chat CRUD Endpoints GET/POST/PUT/DELETE /api/chats  GET /api/chats/{id}</div><div style='font-size: 70%; margin-top: 0px'>[Component: FastAPI Routes (server.py:68-128)]</div><div style='font-size: 80%; margin-top:10px'>Tạo, liệt kê, cập nhật, xóa<br />phiên chat. Đọc X-User-Id<br />header để cô lập dữ liệu theo<br />user</div>"]
+      style 12 fill:#bbf7d0,stroke:#82ac91,color:#14532d
+      13["<div style='font-weight: bold'>Message Send Endpoint POST /api/chats/{id}/messages</div><div style='font-size: 70%; margin-top: 0px'>[Component: FastAPI Route (server.py:130-180)]</div><div style='font-size: 80%; margin-top:10px'>Lưu user message → gọi<br />LLMEngine.process_chat(thread_id='{user_id}_{chat_id}')<br />→ lưu assistant message → trả<br />về cả 3 objects</div>"]
+      style 13 fill:#bbf7d0,stroke:#82ac91,color:#14532d
+      14["<div style='font-weight: bold'>Static Files Mount /static</div><div style='font-size: 70%; margin-top: 0px'>[Component: FastAPI StaticFiles (server.py:183-194)]</div><div style='font-size: 80%; margin-top:10px'>Serve toàn bộ thư mục<br />web/static/ (index.html, CSS,<br />JS). GET / trả về<br />FileResponse(index.html)</div>"]
+      style 14 fill:#bbf7d0,stroke:#82ac91,color:#14532d
+      9["<div style='font-weight: bold'>CORS Middleware</div><div style='font-size: 70%; margin-top: 0px'>[Component: FastAPI CORSMiddleware (server.py:21)]</div><div style='font-size: 80%; margin-top:10px'>Cho phép origins=* cho mọi<br />client. Bật<br />allow_credentials,<br />allow_methods=*,<br />allow_headers=*</div>"]
+      style 9 fill:#fde68a,stroke:#b1a160,color:#78350f
+    end
+
+    3-. "<div>HTTP Request</div><div style='font-size: 70%'>[JSON/HTTP]</div>" .->9
+    9-. "<div>Forward đến route</div><div style='font-size: 70%'>[FastAPI routing]</div>" .->10
+    9-. "<div>Forward đến route</div><div style='font-size: 70%'>[FastAPI routing]</div>" .->11
+    9-. "<div>Forward đến route</div><div style='font-size: 70%'>[FastAPI routing]</div>" .->12
+    9-. "<div>Forward đến route</div><div style='font-size: 70%'>[FastAPI routing]</div>" .->13
+    11-. "<div>LLMEngine.check_model_health()</div><div style='font-size: 70%'>[Python call]</div>" .->20
+    12-. "<div>ChatStore.get_all_chats(user_id)</div><div style='font-size: 70%'>[Python call]</div>" .->15
+    13-. "<div>ChatStore.add_message(role='user')</div><div style='font-size: 70%'>[Python call]</div>" .->15
+    13-. "<div>LLMEngine.process_chat(thread_id=user_id+chat_id)</div><div style='font-size: 70%'>[Python call]</div>" .->20
+  end

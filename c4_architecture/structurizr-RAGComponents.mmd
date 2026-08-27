@@ -1,0 +1,37 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - RAG Travel Tools Service - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    20["<div style='font-weight: bold'>LLM Engine Router</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangChain / g4f (web/llm_engine.py)]</div><div style='font-size: 80%; margin-top:10px'>Bộ định tuyến thông minh:<br />phân loại mode API vs G4F →<br />khởi tạo ChatOpenAI hoặc G4F<br />Client → tích hợp RAG+Weather<br />tools → fallback khi lỗi</div>"]
+    style 20 fill:#b45309,stroke:#7d3a06,color:#ffffff
+    27["<div style='font-weight: bold'>LangGraph ReAct Agent</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangGraph / LangChain (tasks/main_03_01.py)]</div><div style='font-size: 80%; margin-top:10px'>Đồ thị suy luận tuần tự: LLM<br />Node ↔ ToolNode. Sử dụng<br />RemainingSteps để chống vòng<br />lặp vô tận (max 10 bước).<br />MemorySaver persist trạng<br />thái theo thread_id</div>"]
+    style 27 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+
+    subgraph 33 ["RAG Travel Tools Service"]
+      style 33 fill:#ffffff,stroke:#044231,color:#044231
+
+      34["<div style='font-weight: bold'>CORNWALL_TRAVEL_DOCS (4 Documents)</div><div style='font-size: 70%; margin-top: 0px'>[Component: Python list[Document] (travel.py:11-35)]</div><div style='font-size: 80%; margin-top:10px'>Corpus tĩnh 4 documents<br />Wikivoyage: Newquay (surfing,<br />Fistral Beach), St Ives<br />(Porthmeor Beach, Tate<br />Gallery), Falmouth (National<br />Maritime Museum, Pendennis<br />Castle), Perranporth<br />(Watering Hole pub)</div>"]
+      style 34 fill:#ecfdf5,stroke:#a5b1ab,color:#064e3b
+      35["<div style='font-weight: bold'>RecursiveCharacterTextSplitter</div><div style='font-size: 70%; margin-top: 0px'>[Component: LangChain RecursiveCharacterTextSplitter (travel.py:58)]</div><div style='font-size: 80%; margin-top:10px'>Cắt documents thành chunks:<br />chunk_size=500,<br />chunk_overlap=50. Áp dụng cho<br />lần đầu build Chroma index</div>"]
+      style 35 fill:#d1fae5,stroke:#92afa0,color:#065f46
+      36["<div style='font-weight: bold'>HuggingFace Embeddings (all-MiniLM-L6-v2)</div><div style='font-size: 70%; margin-top: 0px'>[Component: HuggingFaceEmbeddings (travel.py:45-48)]</div><div style='font-size: 80%; margin-top:10px'>Encode văn bản → 384-dim<br />dense vectors. Fallback sang<br />FakeEmbeddings(size=384) nếu<br />import lỗi. Dùng cho cả<br />indexing và query time</div>"]
+      style 36 fill:#d1fae5,stroke:#92afa0,color:#065f46
+      37["<div style='font-weight: bold'>Chroma Vector Store (./chroma_db)</div><div style='font-size: 70%; margin-top: 0px'>[Component: langchain_community.Chroma (travel.py:52-64)]</div><div style='font-size: 80%; margin-top:10px'>HNSW index lưu trên disk.<br />Kiểm tra<br />os.path.exists(CHROMA_PERSIST_DIR):<br />nếu có → load, nếu không →<br />build mới từ chunks.<br />Singleton<br />_ti_vectorstore_client</div>"]
+      style 37 fill:#d1fae5,stroke:#92afa0,color:#065f46
+      38["<div style='font-weight: bold'>Chroma Retriever (k=3 Top-N)</div><div style='font-size: 70%; margin-top: 0px'>[Component: Chroma.as_retriever (travel.py:71)]</div><div style='font-size: 80%; margin-top:10px'>vectorstore.as_retriever(search_kwargs={'k':3}).<br />Trả về Top-3 chunks theo<br />Cosine Similarity</div>"]
+      style 38 fill:#d1fae5,stroke:#92afa0,color:#065f46
+      39["<div style='font-weight: bold'>@tool search_travel_info(query: str)</div><div style='font-size: 70%; margin-top: 0px'>[Component: langchain_core.tools.tool (travel.py:73)]</div><div style='font-size: 80%; margin-top:10px'>LangChain @tool decorated.<br />Gọi retriever.invoke(query) →<br />lấy tối đa 4 docs → join bằng<br />'\ ---\ ' → trả về string<br />Observation</div>"]
+      style 39 fill:#fef9c3,stroke:#b1ae88,color:#713f12
+    end
+
+    27-. "<div>Invoke search_travel_info</div><div style='font-size: 70%'>[LangChain tool]</div>" .->39
+    20-. "<div>Keyword-triggered RAG call</div><div style='font-size: 70%'>[Python direct invoke]</div>" .->39
+    39-. "<div>retriever.invoke(query)</div><div style='font-size: 70%'>[LangChain]</div>" .->38
+    38-. "<div>similarity_search(k=3)</div><div style='font-size: 70%'>[ChromaDB API]</div>" .->37
+    37-. "<div>encode(text) → 384-dim</div><div style='font-size: 70%'>[HuggingFace Inference]</div>" .->36
+    37-. "<div>Ingestion: split → embed →<br />persist</div><div style='font-size: 70%'>[Build pipeline]</div>" .->34
+    35-. "<div>split_documents(CORNWALL_TRAVEL_DOCS)</div><div style='font-size: 70%'>[One-time build]</div>" .->34
+    20-. "<div>create_react_agent + invoke</div><div style='font-size: 70%'>[LangGraph Python API]</div>" .->27
+  end

@@ -1,0 +1,22 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - System Context"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    1["<div style='font-weight: bold'>Người dùng du lịch (User)</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Tra cứu du lịch Cornwall &<br />thời tiết qua giao diện Chat<br />Web. Mỗi phiên dùng userId<br />riêng (usr_xxxxxxxx) lưu<br />trong LocalStorage</div>"]
+    style 1 fill:#0f172a,stroke:#0a101d,color:#ffffff
+    2["<div style='font-weight: bold'>AI Agents Studio Platform</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Nền tảng hội thoại AI đa<br />người dùng: LangGraph ReAct +<br />RAG ChromaDB + multi-model,<br />chạy trên FastAPI/Uvicorn<br />port :8000</div>"]
+    style 2 fill:#0284c7,stroke:#015c8b,color:#ffffff
+    47["<div style='font-weight: bold'>Open-Meteo Cloud API</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Geocoding + Weather Forecast<br />API. Free, no key required.<br />Endpoints: /v1/search<br />(geocoding) + /v1/forecast<br />(weather). Timeout<br />client-side 5s</div>"]
+    style 47 fill:#64748b,stroke:#465161,color:#ffffff
+    48["<div style='font-weight: bold'>HCMUS FIT AI Server (Qwen3.6-27B)</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>OpenAI-compatible REST API<br />endpoint. Serving model<br />Qwen3.6-27B. Đọc từ .env:<br />OPENAI_API_BASE +<br />OPENAI_API_KEY (hoặc url +<br />key)</div>"]
+    style 48 fill:#64748b,stroke:#465161,color:#ffffff
+    49["<div style='font-weight: bold'>G4F Free LLM Gateway</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>Reverse-proxy miễn phí đến<br />Llama-3.3-70B, Llama-3.1-8B,<br />Command-R, DeepSeek-R1 qua<br />thư viện g4f. Không cần API<br />Key nhưng phụ thuộc server<br />bên thứ 3</div>"]
+    style 49 fill:#64748b,stroke:#465161,color:#ffffff
+
+    1-. "<div>Sử dụng giao diện Chat</div><div style='font-size: 70%'>[HTTPS]</div>" .->2
+    2-. "<div>Lấy dữ liệu thời tiết thời<br />gian thực</div><div style='font-size: 70%'>[HTTPS REST]</div>" .->47
+    2-. "<div>Gọi LLM suy luận ReAct</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->48
+    2-. "<div>Gọi LLM miễn phí (G4F mode)</div><div style='font-size: 70%'>[HTTPS]</div>" .->49
+  end

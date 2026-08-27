@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: "KTPM — JAMstack Studio" }}</title>
+  <meta name="description" content="{{ site.description }}">
+  
+  <!-- Typography from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div id="reading-progress-bar"></div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="{{ '/' | relative_url }}" class="brand-link">
+        <div class="brand-logo">⚡</div>
+        <div class="brand-info">
+          <h1>JAMSTACK STUDIO</h1>
+          <span class="tagline">KTPM LAB — GITHUB PAGES & JEKYLL SSG</span>
+        </div>
+      </a>
+
+      <nav class="header-nav">
+        <a href="{{ '/' | relative_url }}" class="nav-link" data-nav="home">🏠 Trang chủ</a>
+        <a href="{{ '/kien-truc-phan-mem' | relative_url }}" class="nav-link" data-nav="ktpm">🏛️ Kiến trúc</a>
+        <a href="{{ '/pham-ngoc-gia-bao' | relative_url }}" class="nav-link" data-nav="bao">👨‍💻 Gia Bảo</a>
+        <a href="{{ '/lee-kun-da' | relative_url }}" class="nav-link" data-nav="kunda">👨‍💻 Kun Da</a>
+        <a href="{{ '/phan-thi-huong-xuan' | relative_url }}" class="nav-link" data-nav="xuan">👩‍🎓 Hương Xuân</a>
+        <a href="{{ '/tran-tho' | relative_url }}" class="nav-link" data-nav="tho">👨‍💻 Trần Thọ</a>
+        <a href="{{ '/pham-cao-thu-huong' | relative_url }}" class="nav-link" data-nav="huong">👩‍💻 Thu Hương</a>
+        
+        <!-- Live API Badge -->
+        <span id="gh-status-badge" class="badge badge-yellow">⚡ Loading API...</span>
+
+        <!-- Dark/Light Mode Toggle Button -->
+        <button id="theme-toggle-btn" class="btn btn-icon" title="Chuyển đổi giao diện Sáng / Tối">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-text" style="font-size: 12px; margin-left: 2px;">Tối</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+    {% if page.url == '/' or page.url == '/index.html' or page.is_home %}
+      <!-- ================= HERO SECTION (HOMEPAGE) ================= -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <span class="badge badge-purple" style="margin-bottom: 12px;">🚀 KIẾN TRÚC PHẦN MỀM HIỆN ĐẠI</span>
+          <h2>Xây Dựng Website Tĩnh Đỉnh Cao Với JAMstack</h2>
+          <p>
+            Tận dụng sức mạnh của <strong>JavaScript</strong> chạy Client-side, <strong>APIs</strong> mở rộng linh hoạt và <strong>Markup</strong> tĩnh được biên dịch sẵn qua Jekyll SSG trên nền tảng GitHub Pages CDN toàn cầu.
+          </p>
+
+          <div class="hero-stats">
+            <div class="hero-stat-card">
+              <span class="num">&lt; 50ms</span>
+              <span class="label">TTFB Tốc độ tải</span>
+            </div>
+            <div class="hero-stat-card">
+              <span class="num">100 / 100</span>
+              <span class="label">Google Lighthouse</span>
+            </div>
+            <div class="hero-stat-card">
+              <span class="num">0%</span>
+              <span class="label">Bề mặt SQL Injection</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <a href="{{ '/kien-truc-phan-mem' | relative_url }}" class="btn btn-primary">📖 Khám phá bài viết KTPM</a>
+            <a href="https://github.com/Bubusr/my-website" target="_blank" class="btn">📂 GitHub Repository ↗</a>
+          </div>
+        </div>
+
+        <div class="hero-card-side">
+          <h3>⚡ 3 Trụ Cột Cốt Lõi (J - A - M)</h3>
+          <ul>
+            <li><strong>🟡 J (JavaScript):</strong> Dark mode, Real-time Search, Dynamic Routing</li>
+            <li><strong>🟢 A (APIs):</strong> GitHub REST API, Serverless Form Endpoints</li>
+            <li><strong>🔵 M (Markup):</strong> Jekyll SSG, Markdown Pages, Clean HTML</li>
+            <li><strong>🟣 Hosting:</strong> Fastly Edge CDN & GitHub Pages</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= SEARCH & FILTER TOOLBAR ================= -->
+      <section class="search-toolbar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm bài viết, thành viên nhóm (Live Search)...">
+          <button id="search-clear-btn" class="search-clear-btn">✖</button>
+        </div>
+
+        <div class="filter-group">
+          <button class="filter-pill active" data-filter="all">Tất cả mục</button>
+          <button class="filter-pill" data-filter="ktpm">🏛️ Kiến trúc</button>
+          <button class="filter-pill" data-filter="author">👥 Thành viên nhóm (5)</button>
+          <button class="filter-pill" data-filter="github">📦 GitHub Pages</button>
+        </div>
+      </section>
+
+      <!-- ================= ARTICLES / CARDS GRID ================= -->
+      <div class="section-header">
+        <h2>📑 Danh Mục Bài Viết & Thành Viên Nhóm</h2>
+        <span class="badge badge-yellow">Markdown SSG</span>
+      </div>
+
+      <div class="cards-grid" id="pages-grid">
+        <!-- Card 1: Kiến trúc phần mềm -->
+        <div class="jam-card" data-category="ktpm" data-tags="kiến trúc phần mềm ktpm jamstack static site generator jekyll cdn quality attributes">
+          <div>
+            <div class="jam-card-header">
+              <div class="jam-card-icon" style="background-color: var(--pastel-yellow);">🏛️</div>
+              <span class="badge badge-yellow">Chuyên đề KTPM</span>
+            </div>
+            <h3 class="jam-card-title">
+              <a href="{{ '/kien-truc-phan-mem' | relative_url }}">Kiến Trúc Phần Mềm & JAMstack</a>
+            </h3>
+            <p class="jam-card-desc">
+              Phân tích chi tiết mô hình kiến trúc JAMstack, góc nhìn Logic View, đánh giá các thuộc tính chất lượng (Performance, Security, Scalability).
+            </p>
+          </div>
+          <div class="jam-card-footer">
+            <span class="badge badge-gray">⏱️ 3 phút đọc</span>
+            <a href="{{ '/kien-truc-phan-mem' | relative_url }}" class="jam-card-link">Đọc ngay ➔</a>
+          </div>
+        </div>
+
+        <!-- Card 2: Phạm Ngọc Gia Bảo -->
+        <div class="jam-card" data-category="author" data-tags="phạm ngọc gia bảo gia bảo devops cdn hosting thành viên">
+          <div>
+            <div class="jam-card-header">
+              <div class="jam-card-icon" style="background-color: var(--pastel-yellow);">👨‍💻</div>
+              <span class="badge badge-yellow">Thành viên</span>
+            </div>
+            <h3 class="jam-card-title">
+              <a href="{{ '/pham-ngoc-gia-bao' | relative_url }}">Phạm Ngọc Gia Bảo</a>
+            </h3>
+            <p class="jam-card-desc">
+              Kỹ sư DevOps & Hosting — Nghiên cứu cơ chế phân phối tĩnh Edge CDN và tự động hóa CI/CD trong JAMstack.
+            </p>
+          </div>
+          <div class="jam-card-footer">
+            <span class="badge badge-yellow">DevOps & Hosting</span>
+            <a href="{{ '/pham-ngoc-gia-bao' | relative_url }}" class="jam-card-link">Xem hồ sơ ➔</a>
+          </div>
+        </div>
+
+        <!-- Card 3: Lee Kun Da -->
+        <div class="jam-card" data-category="author" data-tags="lee kun da kunda javascript client-side ui ux dark mode thành viên">
+          <div>
+            <div class="jam-card-header">
+              <div class="jam-card-icon" style="background-color: var(--pastel-pink);">👨‍💻</div>
+              <span class="badge badge-pink">Thành viên</span>
+            </div>
+            <h3 class="jam-card-title">
+              <a href="{{ '/lee-kun-da' | relative_url }}">Lee Kun Da</a>
+            </h3>
+            <p class="jam-card-desc">
+              Lập trình viên Client-Side & Tối ưu UI/UX — Xây dựng logic JavaScript tìm kiếm không reload, theme switcher Neo-Brutalist.
+            </p>
+          </div>
+          <div class="jam-card-footer">
+            <span class="badge badge-pink">UI/UX & Client JS</span>
+            <a href="{{ '/lee-kun-da' | relative_url }}" class="jam-card-link">Xem hồ sơ ➔</a>
+          </div>
+        </div>
+
+        <!-- Card 4: Phan Thị Hương Xuân -->
+        <div class="jam-card" data-category="author" data-tags="phan thị hương xuân hương xuân quality attributes logic view thành viên">
+          <div>
+            <div class="jam-card-header">
+              <div class="jam-card-icon" style="background-color: var(--pastel-green);">👩‍🎓</div>
+              <span class="badge badge-green">Thành viên</span>
+            </div>
+            <h3 class="jam-card-title">
+              <a href="{{ '/phan-thi-huong-xuan' | relative_url }}">Phan Thị Hương Xuân</a>
+            </h3>
+            <p class="jam-card-desc">
+              Chuyên viên Phân tích Kiến trúc — Đánh giá các thuộc tính chất lượng (TTFB, Core Web Vitals, Security Headers) và Logic View.
+            </p>
+          </div>
+          <div class="jam-card-footer">
+            <span class="badge badge-green">Quality Analyst</span>
+            <a href="{{ '/phan-thi-huong-xuan' | relative_url }}" class="jam-card-link">Xem hồ sơ ➔</a>
+          </div>
+        </div>
+
+        <!-- Card 5: Trần Thọ -->
+        <div class="jam-card" data-category="author" data-tags="trần thọ tran tho apis security serverless form thành viên">
+          <div>
+            <div class="jam-card-header">
+              <div class="jam-card-icon" style="background-color: var(--pastel-orange);">👨‍💻</div>
+              <span class="badge badge-yellow">Thành viên</span>
+            </div>
+            <h3 class="jam-card-title">
+              <a href="{{ '/tran-tho' | relative_url }}">Trần Thọ</a>
+            </h3>
+            <p class="jam-card-desc">
+              Kỹ sư Tích hợp API & An toàn thông tin — Tích hợp GitHub REST API và module Form phản hồi không máy chủ (Serverless).
+            </p>
+          </div>
+          <div class="jam-card-footer">
+            <span class="badge badge-yellow">APIs & Security</span>
+            <a href="{{ '/tran-tho' | relative_url }}" class="jam-card-link">Xem hồ sơ ➔</a>
+          </div>
+        </div>
+
+        <!-- Card 6: Phạm Cao Thu Hương -->
+        <div class="jam-card" data-category="author" data-tags="phạm cao thu hương thu hương bubusr leader ssg jekyll markdown thành viên">
+          <div>
+            <div class="jam-card-header">
+              <div class="jam-card-icon" style="background-color: var(--pastel-blue);">👩‍💻</div>
+              <span class="badge badge-blue">Trưởng nhóm</span>
+            </div>
+            <h3 class="jam-card-title">
+              <a href="{{ '/pham-cao-thu-huong' | relative_url }}">Phạm Cao Thu Hương</a>
+            </h3>
+            <p class="jam-card-desc">
+              Trưởng nhóm & Kiến trúc sư phần mềm — Khởi tạo hệ thống SSG Jekyll, cấu hình GitHub Pages CI/CD và điều phối kiến trúc.
+            </p>
+          </div>
+          <div class="jam-card-footer">
+            <span class="badge badge-purple">@Bubusr</span>
+            <a href="{{ '/pham-cao-thu-huong' | relative_url }}" class="jam-card-link">Xem hồ sơ ➔</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="search-empty-state" style="display: none; text-align: center; padding: 40px; background: var(--bg-surface); border: var(--border-solid); border-radius: 8px; margin-bottom: 40px;">
+        <p style="font-size: 16px; font-weight: 700;">🔍 Không tìm thấy kết quả phù hợp với từ khóa của bạn.</p>
+        <p style="color: var(--text-muted); font-size: 13px; margin-top: 6px;">Hãy thử tìm bằng tên các thành viên (Bảo, Da, Xuân, Thọ, Hương) hoặc "Kiến trúc".</p>
+      </div>
+
+      <!-- ================= GITHUB REST API LIVE SECTION (A - APIS) ================= -->
+      <section class="github-api-container">
+        <div class="section-header">
+          <h2>⚡ Trụ Cột A: Tích Hợp GitHub REST API (Live Data)</h2>
+          <span class="badge badge-blue">Dynamic Client API</span>
+        </div>
+
+        <div id="gh-profile-content" class="gh-profile-header">
+          <div style="padding: 10px; font-size: 14px; color: var(--text-muted);">
+            ⏳ Đang tải dữ liệu hồ sơ từ GitHub API (https://api.github.com/users/Bubusr)...
+          </div>
+        </div>
+
+        <h4 style="font-size: 15px; font-weight: 800; margin-bottom: 14px;">📂 Các kho lưu trữ mã nguồn mới nhất:</h4>
+        <div id="gh-repos-list" class="repos-grid">
+          <div class="repo-card" style="text-align: center; padding: 20px; color: var(--text-muted);">
+            ⏳ Đang nạp danh sách Repositories...
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CONTACT & FEEDBACK FORM (SERVERLESS CLIENT) ================= -->
+      <section class="form-section">
+        <div class="section-header">
+          <h2>✉️ Form Phản Hồi Trực Tiếp (Serverless Feedback)</h2>
+          <span class="badge badge-green">Serverless API: FormSubmit</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">
+          Gửi nhận xét hoặc câu hỏi cho nhóm. Dữ liệu được JavaScript xử lý bất đồng bộ qua <strong>Serverless API Endpoint</strong> và chuyển tiếp thẳng về hòm thư nhóm mà không cần máy chủ Backend riêng.
+        </p>
+        <div style="margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <span class="badge badge-yellow">🔗 Endpoint: https://formsubmit.co/ajax/pc.thuhuong@gmail.com</span>
+          <span class="badge badge-blue">📬 Người nhận: pc.thuhuong@gmail.com</span>
+        </div>
+
+        <form id="jam-contact-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="form-name">Họ và tên của bạn:</label>
+              <input type="text" id="form-name" class="form-control" placeholder="Ví dụ: TS. Ngô Huy Biên" required>
+            </div>
+            <div class="form-group">
+              <label for="form-email">Địa chỉ Email:</label>
+              <input type="email" id="form-email" class="form-control" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group form-full">
+              <label for="form-message">Nội dung phản hồi / Góp ý:</label>
+              <textarea id="form-message" class="form-control" placeholder="Nhập ý kiến của bạn về đề tài JAMstack hoặc kiến trúc phần mềm..." required></textarea>
+            </div>
+          </div>
+          <button type="submit" id="form-submit-btn" class="btn btn-success">
+            ✉️ Gửi phản hồi ngay
+          </button>
+          <div id="form-alert-msg" class="form-alert"></div>
+        </form>
+      </section>
+
+    {% else %}
+      <!-- ================= DETAIL PAGE LAYOUT (MARKDOWN PAGES) ================= -->
+      <article class="page-content-card">
+        <nav class="breadcrumb-bar">
+          <a href="{{ '/' | relative_url }}">🏠 Trang chủ</a>
+          <span>/</span>
+          <span>{{ page.title | default: "Chi tiết bài viết" }}</span>
+        </nav>
+
+        <div class="markdown-body">
+          {{ content }}
+        </div>
+
+        <div style="margin-top: 36px; padding-top: 20px; border-top: var(--border-solid); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <a href="{{ '/' | relative_url }}" class="btn btn-primary">⬅ Quay lại Trang Chủ</a>
+          <span class="badge badge-yellow">Tệp nguồn: {{ page.path | default: "Markdown" }}</span>
+        </div>
+      </article>
+    {% endif %}
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="brand-logo" style="width: 32px; height: 32px; font-size: 16px;">⚡</div>
+        <div>
+          <strong style="font-size: 14px;">KTPM JAMSTACK STUDIO</strong>
+          <div style="font-size: 12px; color: var(--text-muted);">Môn học Kiến trúc Phần mềm — Giảng viên: TS. Ngô Huy Biên</div>
+        </div>
+      </div>
+
+      <div class="footer-badges">
+        <span class="badge badge-yellow">J - JavaScript</span>
+        <span class="badge badge-green">A - APIs</span>
+        <span class="badge badge-blue">M - Markup</span>
+        <span class="badge badge-purple">Jekyll v3.10.0</span>
+        <span class="badge badge-gray">GitHub Pages CDN</span>
+      </div>
+
+      <div class="footer-copy">
+        © 2026 Nhóm KTPM: <strong>Phạm Ngọc Gia Bảo</strong> • <strong>Lee Kun Da</strong> • <strong>Phan Thị Hương Xuân</strong> • <strong>Trần Thọ</strong> • <strong>Phạm Cao Thu Hương</strong>.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript File -->
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

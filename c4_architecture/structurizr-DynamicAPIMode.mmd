@@ -1,0 +1,56 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - Dynamic"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    subgraph 2 ["AI Agents Studio Platform"]
+      style 2 fill:#ffffff,stroke:#015c8b,color:#015c8b
+
+      15["<div style='font-weight: bold'>Chat Store Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / File I/O (web/chat_store.py)]</div><div style='font-size: 80%; margin-top:10px'>Tầng persistence cho phiên<br />hội thoại. Mọi thao tác CRUD<br />đọc-ghi trực tiếp vào file<br />JSON duy nhất. Lọc theo<br />user_id để cô lập đa người<br />dùng</div>"]
+      style 15 fill:#7c3aed,stroke:#5628a5,color:#ffffff
+      20["<div style='font-weight: bold'>LLM Engine Router</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangChain / g4f (web/llm_engine.py)]</div><div style='font-size: 80%; margin-top:10px'>Bộ định tuyến thông minh:<br />phân loại mode API vs G4F →<br />khởi tạo ChatOpenAI hoặc G4F<br />Client → tích hợp RAG+Weather<br />tools → fallback khi lỗi</div>"]
+      style 20 fill:#b45309,stroke:#7d3a06,color:#ffffff
+      27["<div style='font-weight: bold'>LangGraph ReAct Agent</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangGraph / LangChain (tasks/main_03_01.py)]</div><div style='font-size: 80%; margin-top:10px'>Đồ thị suy luận tuần tự: LLM<br />Node ↔ ToolNode. Sử dụng<br />RemainingSteps để chống vòng<br />lặp vô tận (max 10 bước).<br />MemorySaver persist trạng<br />thái theo thread_id</div>"]
+      style 27 fill:#6d28d9,stroke:#4c1c97,color:#ffffff
+      3["<div style='font-weight: bold'>Web Frontend SPA</div><div style='font-size: 70%; margin-top: 0px'>[Container: HTML5 / Vanilla CSS / Vanilla JS]</div><div style='font-size: 80%; margin-top:10px'>Giao diện SPA Neo-Brutalist.<br />Tự sinh userId → gửi kèm<br />header X-User-Id. Không có<br />backend riêng, gọi FastAPI<br />trực tiếp qua Fetch API.</div>"]
+      style 3 fill:#0ea5e9,stroke:#0973a3,color:#0f172a
+      33["<div style='font-weight: bold'>RAG Travel Tools Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / LangChain / HuggingFace (tools/travel.py)]</div><div style='font-size: 80%; margin-top:10px'>Thư viện công cụ truy vấn tri<br />thức Cornwall. Lazy-init: chỉ<br />load ChromaDB và embedding<br />model lần đầu gọi, cache<br />global để tái sử dụng</div>"]
+      style 33 fill:#065f46,stroke:#044231,color:#ffffff
+      40["<div style='font-weight: bold'>Weather Tools Service</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python / requests / LangChain (tools/weather.py)]</div><div style='font-size: 80%; margin-top:10px'>3 tool weather: Mock random<br />(offline), Open-Meteo<br />real-time (no key),<br />OpenWeatherMap (cần key,<br />fallback về Open-Meteo)</div>"]
+      style 40 fill:#92400e,stroke:#662c09,color:#ffffff
+      45[("<div style='font-weight: bold'>ChromaDB Vector Database</div><div style='font-size: 70%; margin-top: 0px'>[Container: ChromaDB / SQLite (./chroma_db/)]</div><div style='font-size: 80%; margin-top:10px'>Database vector lưu trữ bền<br />vững 384-dim HNSW index. Tự<br />động persist/load từ disk.<br />Duy nhất 1 collection cho<br />Cornwall travel documents</div>")]
+      style 45 fill:#0f766e,stroke:#0a524d,color:#ffffff
+      8["<div style='font-weight: bold'>FastAPI Backend Server</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / FastAPI 0.115 / Uvicorn (web/server.py)]</div><div style='font-size: 80%; margin-top:10px'>REST API gateway duy nhất.<br />Tiếp nhận request, phân tách<br />phiên người dùng qua<br />X-User-Id header, điều phối<br />ChatStore và LLMEngine</div>"]
+      style 8 fill:#1d4ed8,stroke:#143697,color:#ffffff
+    end
+
+    1["<div style='font-weight: bold'>Người dùng du lịch (User)</div><div style='font-size: 70%; margin-top: 0px'>[Person]</div><div style='font-size: 80%; margin-top:10px'>Tra cứu du lịch Cornwall &<br />thời tiết qua giao diện Chat<br />Web. Mỗi phiên dùng userId<br />riêng (usr_xxxxxxxx) lưu<br />trong LocalStorage</div>"]
+    style 1 fill:#0f172a,stroke:#0a101d,color:#ffffff
+    48["<div style='font-weight: bold'>HCMUS FIT AI Server (Qwen3.6-27B)</div><div style='font-size: 70%; margin-top: 0px'>[Software System]</div><div style='font-size: 80%; margin-top:10px'>OpenAI-compatible REST API<br />endpoint. Serving model<br />Qwen3.6-27B. Đọc từ .env:<br />OPENAI_API_BASE +<br />OPENAI_API_KEY (hoặc url +<br />key)</div>"]
+    style 48 fill:#64748b,stroke:#465161,color:#ffffff
+
+    1-. "<div>1. 1. Nhập câu hỏi Cornwall<br />qua Chat UI</div><div style='font-size: 70%'>[HTTPS / Web Browser]</div>" .->3
+    3-. "<div>2. 2. POST<br />/api/chats/{id}/messages +<br />X-User-Id + enable_rag=true +<br />enable_weather=true</div><div style='font-size: 70%'>[JSON / HTTP]</div>" .->8
+    8-. "<div>3. 3.<br />ChatStore.get_chat(chat_id,<br />user_id) — xác thực quyền</div><div style='font-size: 70%'>[Python Method Calls]</div>" .->15
+    8-. "<div>4. 4.<br />ChatStore.add_message(role='user',<br />content)</div><div style='font-size: 70%'>[Python Method Calls]</div>" .->15
+    8-. "<div>5. 5.<br />LLMEngine.process_chat(thread_id='usr_Alice_chat-abc123',<br />mode='api')</div><div style='font-size: 70%'>[Python Method Calls]</div>" .->20
+    20-. "<div>6. 6.<br />create_react_agent.invoke(messages=[HumanMessage],<br />config={thread_id})</div><div style='font-size: 70%'>[LangGraph Python API]</div>" .->27
+    27-. "<div>7. 7. LLM Node: Suy luận<br />ReAct — quyết định gọi<br />search_travel_info</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->48
+    48-. "<div>8. 8. Trả về<br />AIMessage{tool_calls:<br />[search_travel_info(query='Cornwall<br />surfing')]}</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->27
+    27-. "<div>9. 9. ToolNode:<br />search_travel_info.invoke({query:<br />'Cornwall surfing'})</div><div style='font-size: 70%'>[LangGraph ToolNode]</div>" .->33
+    33-. "<div>10. 10. retriever.invoke() —<br />Top-3 Cosine Similarity query</div><div style='font-size: 70%'>[SQLite I/O (chroma_db/)]</div>" .->45
+    45-. "<div>11. 11. Trả về 3 chunks:<br />Newquay, Fistral Beach,<br />surfing schools</div><div style='font-size: 70%'>[SQLite I/O (chroma_db/)]</div>" .->33
+    33-. "<div>12. 12. ToolMessage<br />Observation: 'Newquay is<br />known as UK surfing<br />capital...'</div><div style='font-size: 70%'>[LangGraph ToolNode]</div>" .->27
+    27-. "<div>13. 13. LLM Node lần 2: Suy<br />luận — quyết định gọi<br />mock_weather_forecast</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->48
+    48-. "<div>14. 14. Trả về<br />AIMessage{tool_calls:<br />[mock_weather_forecast(town='Newquay')]}</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->27
+    27-. "<div>15. 15. ToolNode:<br />mock_weather_forecast.invoke({town:<br />'Newquay'})</div><div style='font-size: 70%'>[LangGraph ToolNode]</div>" .->40
+    40-. "<div>16. 16. ToolMessage: {town:<br />Newquay, weather: sunny,<br />temperature: 24}</div><div style='font-size: 70%'>[LangGraph ToolNode]</div>" .->27
+    27-. "<div>17. 17. LLM Node lần 3: Tổng<br />hợp tất cả Observations →<br />Final Answer</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->48
+    48-. "<div>18. 18. AIMessage Final:<br />'Newquay là thủ đô lướt sóng<br />UK, thời tiết hiện tại 24°C<br />sunny...'</div><div style='font-size: 70%'>[HTTPS OpenAI Protocol]</div>" .->27
+    27-. "<div>19. 19. Trả về<br />result{messages: [...],<br />tools_used:<br />[search_travel_info,<br />mock_weather_forecast]}</div><div style='font-size: 70%'>[LangGraph Python API]</div>" .->20
+    20-. "<div>20. 20. {content: '...',<br />tools_used: [...]}</div><div style='font-size: 70%'>[Python Method Calls]</div>" .->8
+    8-. "<div>21. 21.<br />ChatStore.add_message(role='assistant',<br />tools_used)</div><div style='font-size: 70%'>[Python Method Calls]</div>" .->15
+    8-. "<div>22. 22. JSON response:<br />{user_message,<br />assistant_message, chat}</div><div style='font-size: 70%'>[JSON / HTTP]</div>" .->3
+    3-. "<div>23. 23. Render Markdown +<br />bảng Tools Used</div><div style='font-size: 70%'>[HTTPS / Web Browser]</div>" .->1
+  end

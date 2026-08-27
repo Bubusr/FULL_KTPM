@@ -1,0 +1,29 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - Chat Store Service - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    8["<div style='font-weight: bold'>FastAPI Backend Server</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / FastAPI 0.115 / Uvicorn (web/server.py)]</div><div style='font-size: 80%; margin-top:10px'>REST API gateway duy nhất.<br />Tiếp nhận request, phân tách<br />phiên người dùng qua<br />X-User-Id header, điều phối<br />ChatStore và LLMEngine</div>"]
+    style 8 fill:#1d4ed8,stroke:#143697,color:#ffffff
+
+    subgraph 15 ["Chat Store Service"]
+      style 15 fill:#ffffff,stroke:#5628a5,color:#5628a5
+
+      16["<div style='font-weight: bold'>_load_db() / _save_db()</div><div style='font-size: 70%; margin-top: 0px'>[Component: json.load / json.dump (chat_store.py:10-21)]</div><div style='font-size: 80%; margin-top:10px'>Đọc/ghi toàn bộ JSON từ<br />chats_db.json. Tự tạo file<br />nếu chưa tồn tại. Bắt<br />Exception trả về cấu trúc<br />rỗng</div>"]
+      style 16 fill:#ddd6fe,stroke:#9a95b1,color:#4c1d95
+      17["<div style='font-weight: bold'>get_all_chats(user_id)</div><div style='font-size: 70%; margin-top: 0px'>[Component: ChatStore.get_all_chats (chat_store.py:25)]</div><div style='font-size: 80%; margin-top:10px'>Filter chats theo user_id rồi<br />sort by updated_at desc. Trả<br />về List[Dict]</div>"]
+      style 17 fill:#ddd6fe,stroke:#9a95b1,color:#4c1d95
+      18["<div style='font-weight: bold'>create_chat(user_id, title, model, mode)</div><div style='font-size: 70%; margin-top: 0px'>[Component: ChatStore.create_chat (chat_store.py:41)]</div><div style='font-size: 80%; margin-top:10px'>Tạo<br />chat_id=chat-{uuid4()[:8]}.<br />Thêm tin nhắn chào mặc định.<br />Ghi vào chats_db.json</div>"]
+      style 18 fill:#ddd6fe,stroke:#9a95b1,color:#4c1d95
+      19["<div style='font-weight: bold'>add_message(chat_id, role, content, tools_used)</div><div style='font-size: 70%; margin-top: 0px'>[Component: ChatStore.add_message (chat_store.py:92)]</div><div style='font-size: 80%; margin-top:10px'>Thêm message với<br />id=msg-{uuid6}. Auto-generate<br />title thông minh từ tin nhắn<br />user đầu tiên (regex strip,<br />cắt 36 ký tự)</div>"]
+      style 19 fill:#ddd6fe,stroke:#9a95b1,color:#4c1d95
+    end
+
+    17-. "<div>json.load(chats_db.json)</div><div style='font-size: 70%'>[File I/O]</div>" .->16
+    18-. "<div>json.dump(chats_db.json)</div><div style='font-size: 70%'>[File I/O]</div>" .->16
+    19-. "<div>json.dump + auto-title regex</div><div style='font-size: 70%'>[File I/O]</div>" .->16
+    8-. "<div>ChatStore.get_all_chats(user_id)</div><div style='font-size: 70%'>[Python call]</div>" .->17
+    8-. "<div>ChatStore.create_chat(user_id,<br />model, mode)</div><div style='font-size: 70%'>[Python call]</div>" .->18
+    8-. "<div>ChatStore.add_message(role='user')</div><div style='font-size: 70%'>[Python call]</div>" .->19
+  end

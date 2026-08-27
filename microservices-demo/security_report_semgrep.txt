@@ -1,0 +1,27 @@
+                  
+                  
+┌────────────────┐
+│ 1 Code Finding │
+└────────────────┘
+                                                
+  [36m[22m[24m  src/currencyservice/client.js[0mjavascript.grpc.security.grpc-nodejs-insecure-connection.grpc-nodejs-[0m
+  [1m     insecure-connection
+   ❯❯❱ [1m[0m                                                  
+          [31m[1m[24m❰❰ Blocking ❱❱[0m
+          Found an insecure gRPC connection. This creates a connection    
+          without encryption to a gRPC client/server. A malicious attacker
+          could tamper with the gRPC message, which could compromise the  
+          machine.                                                        
+          Details: https://sg.run/5QkD                                    
+                                                                          
+           21┆ const grpc = require('grpc');
+           22┆ const pino = require('pino');
+           23┆
+           24┆ const PROTO_PATH = path.join(__dirname,
+               './proto/demo.proto');                 
+           25┆ const PORT = 7000;
+           26┆
+           27┆ const shopProto = grpc.load(PROTO_PATH).hipstershop;
+           28┆ const client = new                            
+               shopProto.CurrencyService(`localhost:${PORT}`,
+           29┆   grpc.credentials.createInsecure());

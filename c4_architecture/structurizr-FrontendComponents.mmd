@@ -1,0 +1,27 @@
+graph LR
+  linkStyle default fill:#ffffff
+
+  subgraph diagram ["AI Agents Studio Platform - Web Frontend SPA - Components"]
+    style diagram fill:#ffffff,stroke:#ffffff
+
+    8["<div style='font-weight: bold'>FastAPI Backend Server</div><div style='font-size: 70%; margin-top: 0px'>[Container: Python 3.11 / FastAPI 0.115 / Uvicorn (web/server.py)]</div><div style='font-size: 80%; margin-top:10px'>REST API gateway duy nhất.<br />Tiếp nhận request, phân tách<br />phiên người dùng qua<br />X-User-Id header, điều phối<br />ChatStore và LLMEngine</div>"]
+    style 8 fill:#1d4ed8,stroke:#143697,color:#ffffff
+
+    subgraph 3 ["Web Frontend SPA"]
+      style 3 fill:#ffffff,stroke:#0973a3,color:#0973a3
+
+      4["<div style='font-weight: bold'>Chat UI & Markdown Renderer</div><div style='font-size: 70%; margin-top: 0px'>[Component: DOM / Fetch API (static/index.html)]</div><div style='font-size: 80%; margin-top:10px'>Hiển thị tin nhắn hội thoại 2<br />chiều. Render Markdown + bảng<br />tools_used theo thời gian<br />thực</div>"]
+      style 4 fill:#bae6fd,stroke:#82a1b1,color:#0c4a6e
+      5["<div style='font-weight: bold'>Client Session Manager</div><div style='font-size: 70%; margin-top: 0px'>[Component: localStorage API (static/index.html)]</div><div style='font-size: 80%; margin-top:10px'>Tự động tạo userId<br />(usr_xxxxxxxx) bằng<br />Math.random. Lưu vào<br />window.localStorage để dùng<br />lại qua các phiên</div>"]
+      style 5 fill:#bae6fd,stroke:#82a1b1,color:#0c4a6e
+      6["<div style='font-weight: bold'>Model & Mode Selector UI</div><div style='font-size: 70%; margin-top: 0px'>[Component: Fetch → /api/models/health (static/index.html)]</div><div style='font-size: 80%; margin-top:10px'>Chọn model (Qwen3.6-27B /<br />GPT-4o / Llama-3.3-70B …) và<br />mode (API / G4F Free). Hiển<br />thị health badge xanh/đỏ/vàng</div>"]
+      style 6 fill:#bae6fd,stroke:#82a1b1,color:#0c4a6e
+      7["<div style='font-weight: bold'>HTTP Fetch API Client</div><div style='font-size: 70%; margin-top: 0px'>[Component: Fetch API + JSON (static/index.html)]</div><div style='font-size: 80%; margin-top:10px'>Gọi REST endpoints. Luôn đính<br />kèm header 'X-User-Id'. Hỗ<br />trợ GET/POST/PUT/DELETE</div>"]
+      style 7 fill:#bae6fd,stroke:#82a1b1,color:#0c4a6e
+    end
+
+    4-. "<div>Trigger HTTP calls</div><div style='font-size: 70%'>[JS function call]</div>" .->7
+    5-. "<div>Cung cấp userId vào headers</div><div style='font-size: 70%'>[JS memory]</div>" .->7
+    6-. "<div>Gọi /api/models/health</div><div style='font-size: 70%'>[JS fetch]</div>" .->7
+    7-. "<div>HTTP Request</div><div style='font-size: 70%'>[JSON/HTTP]</div>" .->8
+  end

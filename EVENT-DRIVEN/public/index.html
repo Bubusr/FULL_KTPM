@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ Thống Bán Hàng Event-Driven Architecture (EDA) — KTPM Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="brand">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <h1>HỆ THỐNG BÁN HÀNG EVENT-DRIVEN (EDA)</h1>
+            <span class="badge badge-black">KTPM LAB</span>
+          </div>
+          <p class="brand-subtitle">Kiến Trúc Hướng Sự Kiện &bull; Fan-Out &bull; Saga Rollback &bull; Staging Buffer
+            &bull; Dead Letter Queue</p>
+        </div>
+      </div>
+      <div class="connection-status-box">
+        <div class="status-indicator">
+          <span class="status-dot online" id="ws-indicator"></span>
+          <span id="ws-status-text" class="status-text">Đang kết nối Event Mesh</span>
+        </div>
+        <span class="badge badge-yellow">Port 3000</span>
+        <button class="btn btn-sm btn-secondary btn-print no-print" onclick="window.print()"
+          title="In trang này hoặc xuất PDF">
+          🖨️ In Trang (PDF)
+        </button>
+      </div>
+    </header>
+
+    <!-- Thống kê đo lường hiệu năng cốt lõi (KPIs) -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">TỔNG SỰ KIỆN ĐÃ PHÁT</span>
+          <span class="badge badge-blue">Producer</span>
+        </div>
+        <span class="metric-val" id="metric-published">0</span>
+        <span class="metric-sub">Sự kiện từ Order Producer</span>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">TÁC VỤ ĐÃ XỬ LÝ</span>
+          <span class="badge badge-green">Consumers</span>
+        </div>
+        <span class="metric-val" id="metric-consumed">0</span>
+        <span class="metric-sub">Xử lý ngầm bất đồng bộ</span>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">SỐ LẦN THỬ LẠI (RETRY)</span>
+          <span class="badge badge-yellow">Backoff</span>
+        </div>
+        <span class="metric-val" id="metric-retries">0</span>
+        <span class="metric-sub">Tự động Exponential Backoff</span>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <span class="metric-label">HÀNG ĐỢI LỖI (DLQ)</span>
+          <span class="badge badge-rose">Isolated</span>
+        </div>
+        <span class="metric-val" id="metric-dlq">0</span>
+        <span class="metric-sub">Thông điệp lỗi bị cách ly</span>
+      </div>
+      <div class="metric-card highlight-metric">
+        <div class="metric-header">
+          <span class="metric-label">ĐỘ TRỄ TẠO ĐƠN PRODUCER</span>
+          <span class="badge badge-purple">Non-Blocking</span>
+        </div>
+        <span class="metric-val" id="metric-producer-lat">&lt; 3 ms</span>
+        <span class="metric-sub">HTTP 201 Async tức thì</span>
+      </div>
+    </section>
+
+    <!-- Khu Vực Thao Tác & Trực Quan Hóa -->
+    <div class="main-grid">
+
+      <!-- CỘT BÊN TRÁI: BẢNG ĐIỀU KHIỂN & KỊCH BẢN DEMO -->
+      <aside class="sidebar-panel">
+
+        <!-- 1. KỊCH BẢN TỰ ĐỘNG CHẠY LIỀN MẠCH -->
+        <div class="neo-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">🚀</span>
+              <h3>1. Kịch Bản Thử Nghiệm Sẵn</h3>
+            </div>
+            <span class="badge badge-green">Khuyên Dùng</span>
+          </div>
+          <p class="card-desc">Bấm 1 chạm để chạy chuỗi sự kiện và quan sát luồng Fan-out:</p>
+
+          <div class="scenario-buttons-list">
+            <button type="button" class="btn btn-scenario btn-scenario-success" id="btn-scenario-full">
+              <span class="scenario-badge">#1</span>
+              <div class="scenario-info">
+                <strong>Quy trình Đơn hàng Thành công A-Z</strong>
+                <span>order.created &rarr; inventory &rarr; payment &rarr; loyalty &rarr; shipping</span>
+              </div>
+            </button>
+            <button type="button" class="btn btn-scenario btn-scenario-danger" id="btn-scenario-saga-fail">
+              <span class="scenario-badge">#2</span>
+              <div class="scenario-info">
+                <strong>Lỗi Thanh toán &rarr; Hoàn Tồn Kho (Saga Rollback)</strong>
+                <span>Bù trừ inventory.released &amp; order.cancelled</span>
+              </div>
+            </button>
+            <button type="button" class="btn btn-scenario btn-scenario-amber" id="btn-scenario-ooo">
+              <span class="scenario-badge">#3</span>
+              <div class="scenario-info">
+                <strong>Sự kiện Đến Sai Thứ Tự (Staging Buffer)</strong>
+                <span>payment.succeeded đến trước order.created &rarr; Khớp FIFO</span>
+              </div>
+            </button>
+            <button type="button" class="btn btn-scenario btn-scenario-purple" id="btn-scenario-retry">
+              <span class="scenario-badge">#4</span>
+              <div class="scenario-info">
+                <strong>Lỗi Tạm Thời &rarr; Thử Lại Tự Động (Exponential Retry)</strong>
+                <span>Consumer lỗi &rarr; Chờ backoff &rarr; Thử lại lần 2 OK</span>
+              </div>
+            </button>
+            <button type="button" class="btn btn-scenario btn-scenario-rose" id="btn-scenario-dlq">
+              <span class="scenario-badge">#5</span>
+              <div class="scenario-info">
+                <strong>Poison Pill Crash &rarr; Cách Ly Vào DLQ &amp; Replay</strong>
+                <span>Lỗi crash 3 lần &rarr; Chuyển vào Dead Letter Queue &rarr; Replay</span>
+              </div>
+            </button>
+          </div>
+
+          <div id="scenario-result" class="result-box hidden"></div>
+        </div>
+
+        <!-- 2. TẠO ĐƠN HÀNG THỦ CÔNG (PRODUCER) -->
+        <div class="neo-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">📦</span>
+              <h3>2. Tạo Đơn Hàng (Producer)</h3>
+            </div>
+            <span class="badge badge-purple">HTTP 201</span>
+          </div>
+
+          <form id="order-form" class="space-y-2">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="cust-name">Họ tên:</label>
+                <input type="text" id="cust-name" class="neo-input" value="Trần Hoàng Nam" required />
+              </div>
+              <div class="form-group">
+                <label for="cust-email">Email:</label>
+                <input type="email" id="cust-email" class="neo-input" value="nam.tran@example.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="prod-select">Sản phẩm đặt mua:</label>
+              <select id="prod-select" class="neo-select">
+                <option value="1200|Laptop Dell XPS 15">Laptop Dell XPS 15 ($1200)</option>
+                <option value="150|Bàn phím cơ Custom">Bàn phím cơ Custom ($150)</option>
+                <option value="80|Chuột không dây Logitech">Chuột không dây Logitech ($80)</option>
+                <option value="450|Màn hình 4K LG 27 inch">Màn hình 4K LG 27" ($450)</option>
+              </select>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-flex" id="btn-create-order">
+                <span>➕ Tạo Đơn Hàng</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-flex" id="btn-random-order">
+                <span>🎲 Đơn Ngẫu Nhiên</span>
+              </button>
+            </div>
+          </form>
+
+          <div id="producer-result" class="result-box hidden"></div>
+        </div>
+
+        <!-- 3. GIẢ LẬP LỖI & ĐỘ TRỄ CONSUMERS -->
+        <div class="neo-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">🎛️</span>
+              <h3>3. Bảng Điều Khiển Dịch Vụ</h3>
+            </div>
+            <span class="badge badge-yellow">Cách Ly Lỗi</span>
+          </div>
+          <p class="card-desc">Chọn dịch vụ cần kiểm tra để cấu hình độ trễ hoặc bật lỗi giả lập:</p>
+
+          <div class="form-group" style="margin-bottom: 8px;">
+            <label for="select-chaos-consumer">Chọn Dịch Vụ (Consumer):</label>
+            <select id="select-chaos-consumer" class="neo-select">
+              <!-- Populated dynamically via JS -->
+            </select>
+          </div>
+
+          <div id="consumers-control-list">
+            <!-- Render selected consumer card -->
+          </div>
+        </div>
+
+        <!-- 4. KHẢ NĂNG MỞ RỘNG ĐỘNG (EXTENSIBILITY) -->
+        <div class="neo-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">🔌</span>
+              <h3>4. Khả Năng Mở Rộng</h3>
+            </div>
+            <span class="badge badge-blue">Zero Downtime</span>
+          </div>
+          <div class="extensibility-box">
+            <div class="ext-service-info">
+              <strong>Fraud & Risk Detection Service</strong>
+              <div class="text-muted text-xs">Tự động chấm điểm rủi ro giao dịch (Zero Downtime)</div>
+            </div>
+            <button class="btn btn-sm btn-outline-neo" id="btn-toggle-fraud">
+              Bật Dịch Vụ Mới
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- CỘT BÊN PHẢI: TRỰC QUAN HÓA LUỒNG SỰ KIỆN & HÀNG ĐỢI LỖI -->
+      <main class="content-panel">
+
+        <!-- HÀNG TRÊN: LUỒNG SỰ KIỆN TỎA RA (FAN-OUT STREAM) -->
+        <div class="neo-card stream-panel-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="card-icon">📡</span>
+              <h3>Luồng Sự Kiện Tỏa Ra Thời Gian Thực (Fan-Out Trace)</h3>
+            </div>
+            <div class="header-tools">
+              <span class="badge badge-green">Live Stream</span>
+              <button class="btn btn-sm btn-secondary" id="btn-clear-logs" title="Xóa màn hình">🗑️ Xóa Log</button>
+            </div>
+          </div>
+
+          <div class="events-stream-container" id="events-stream">
+            <div class="empty-state">
+              <div class="empty-icon">📬</div>
+              <p><strong>Chưa có sự kiện nào trong phiên hiện tại.</strong></p>
+              <span class="text-muted text-xs">Hãy nhấn một trong các Kịch bản (Cột trái) hoặc nút Sự kiện để xem luồng
+                Fan-out thời gian thực!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- HÀNG DƯỚI: 2 CỘT THU GỌN (STAGING BUFFER & DEAD LETTER QUEUE) -->
+        <div class="bottom-split-grid">
+
+          <!-- HÀNG ĐỢI ĐỆM XỬ LÝ SAI THỨ TỰ (OUT-OF-ORDER STAGING BUFFER) -->
+          <div class="neo-card sub-panel-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">⏳</span>
+                <h3>Staging Buffer (Đệm Sai Thứ Tự)</h3>
+              </div>
+              <span class="badge badge-yellow" id="buffer-status-badge">Trống</span>
+            </div>
+            <div id="staging-buffer-list" class="buffer-container">
+              <div class="empty-state-compact">
+                <span>Buffer an toàn &bull; Bấm <strong>"Kịch bản 3"</strong> để thử lưu đệm FIFO</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HÀNG ĐỢI LỖI DEAD LETTER QUEUE (DLQ) -->
+          <div class="neo-card sub-panel-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🛡️</span>
+                <h3>Dead Letter Queue (Hàng Đợi Lỗi)</h3>
+              </div>
+              <div class="header-tools">
+                <button class="btn btn-sm btn-danger" id="btn-clear-dlq" style="padding: 2px 8px; font-size: 11px;">🧹
+                  Xóa</button>
+              </div>
+            </div>
+            <div id="dlq-list" class="dlq-container">
+              <div class="empty-state-compact">
+                <span>DLQ an toàn &bull; Không có thông điệp kẹt</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+Run started:2026-07-22 09:25:59.413731+00:00
+
+Test results:
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:40:26
+39	    l.client.post("/setCurrency",
+40	        {'currency_code': random.choice(currencies)})
+41	
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:43:31
+42	def browseProduct(l):
+43	    l.client.get("/product/" + random.choice(products))
+44	
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:49:14
+48	def addToCart(l):
+49	    product = random.choice(products)
+50	    l.client.get("/product/" + product)
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:53:20
+52	        'product_id': product,
+53	        'quantity': random.randint(1,10)})
+54	    
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:69:40
+68	        'credit_card_number': fake.credit_card_number(card_type="visa"),
+69	        'credit_card_expiration_month': random.randint(1, 12),
+70	        'credit_card_expiration_year': random.randint(current_year, current_year + 70),
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:70:39
+69	        'credit_card_expiration_month': random.randint(1, 12),
+70	        'credit_card_expiration_year': random.randint(current_year, current_year + 70),
+71	        'credit_card_cvv': f"{random.randint(100, 999)}",
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/loadgenerator/locustfile.py:71:30
+70	        'credit_card_expiration_year': random.randint(current_year, current_year + 70),
+71	        'credit_card_cvv': f"{random.randint(100, 999)}",
+72	    })
+
+--------------------------------------------------
+>> Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+   Severity: Low   Confidence: High
+   CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b311-random
+   Location: src/recommendationservice/recommendation_server.py:79:18
+78	        # sample list of indicies to return
+79	        indices = random.sample(range(num_products), num_return)
+80	        # fetch product ids from indices
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 1851
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 8
+		Medium: 0
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 0
+		Medium: 0
+		High: 8
+Files skipped (0):

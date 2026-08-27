@@ -1,0 +1,30 @@
+{
+  "name": "eda-sales-system",
+  "version": "1.0.0",
+  "description": "Event-Driven Architecture Prototype for Sales Order Processing",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "demo": "node demo-cli.js",
+    "test": "node test/eda.test.js"
+  },
+  "keywords": [
+    "event-driven-architecture",
+    "eda",
+    "pub-sub",
+    "fan-out",
+    "dead-letter-queue",
+    "microservices"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "amqplib": "^2.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "redis": "^6.2.1",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.0"
+  }
+}
