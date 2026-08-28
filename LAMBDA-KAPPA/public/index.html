@@ -31,13 +31,13 @@
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('tab-ingest')">
-        ✍️ Tab 1: Nhập Dữ Liệu (In nộp Câu 21)
+        ✍️ Tab 1: Nhập Dữ Liệu
       </button>
       <button class="tab-btn" onclick="switchTab('tab-dashboard')">
-        📊 Tab 2: Báo Cáo Thống Kê (In nộp Câu 22)
+        📊 Tab 2: Báo Cáo Thống Kê
       </button>
       <button class="tab-btn" onclick="switchTab('tab-raw')">
-        📋 Tab 3: Dữ Liệu Thô (In nộp Câu 22)
+        📋 Tab 3: Dữ Liệu Thô
       </button>
       <button class="tab-btn" onclick="switchTab('tab-benchmark')">
         🛠️ Tab 4: Kiểm Thử Chất Lượng & Locust
@@ -51,11 +51,6 @@
     <!-- TAB 1: NHẬP DỮ LIỆU (EVENT INGESTION) - CÂU 21 -->
     <!-- ==================================================== -->
     <section id="tab-ingest" class="tab-content active">
-      <div class="guide-banner">
-        <div class="guide-tag">📸 MINH CHỨNG CÂU 21</div>
-        <p><strong>Yêu cầu đề thi:</strong> <em>"Bản in giao diện nhập dữ liệu vào hệ thống, và bản in cây thư mục mã nguồn hệ thống."</em></p>
-        <small>Sinh viên dùng form bên dưới để nhập giao dịch hoặc bật bộ giả lập luồng để chụp ảnh nộp kèm phiếu thi.</small>
-      </div>
 
       <div class="grid-2col">
         <!-- Form nhập lẻ -->
@@ -156,11 +151,7 @@
     <!-- TAB 2: BÁO CÁO THỐNG KÊ (ANALYTICS DASHBOARD) - CÂU 22 -->
     <!-- ==================================================== -->
     <section id="tab-dashboard" class="tab-content">
-      <div class="guide-banner">
-        <div class="guide-tag">📸 MINH CHỨNG CÂU 22</div>
-        <p><strong>Yêu cầu đề thi:</strong> <em>"Bản in giao diện báo cáo, và giao diện hiển thị dữ liệu thô của báo cáo."</em></p>
-        <small>Biểu đồ bên dưới minh họa cơ chế hợp nhất <strong>Serving Layer: Total = Batch Consolidated + Realtime Delta</strong>.</small>
-      </div>
+
 
       <!-- Formula Notice -->
       <div class="formula-banner">
@@ -222,6 +213,9 @@
           <button class="btn btn-kappa" onclick="triggerKappaReplay()">
             🔄 Replay Stream Kappa (Chạy lại từ Offset 0)
           </button>
+          <button class="btn btn-secondary" onclick="openExportModal('report')">
+            📄 Xem Dữ Liệu Thô Của Báo Cáo (JSON)
+          </button>
           <button class="btn btn-secondary" onclick="fetchAnalyticsReport()">
             🔄 Làm Mới
           </button>
@@ -264,11 +258,7 @@
     <!-- TAB 3: DỮ LIỆU THÔ (RAW EVENT VIEWER) - CÂU 22 -->
     <!-- ==================================================== -->
     <section id="tab-raw" class="tab-content">
-      <div class="guide-banner">
-        <div class="guide-tag">📸 MINH CHỨNG CÂU 22 (Ý 2)</div>
-        <p><strong>Yêu cầu đề thi:</strong> <em>"Bản in giao diện hiển thị dữ liệu thô của báo cáo (Raw Data JSON / Event Log Stream)."</em></p>
-        <small>Sinh viên chụp màn hình bảng sự kiện thô và hộp mã JSON bên dưới để nộp cho giảng viên.</small>
-      </div>
+
 
       <div class="raw-data-layout">
         <!-- Raw Table -->
@@ -302,11 +292,13 @@
         <!-- Raw JSON Inspector -->
         <div class="card">
           <div class="card-header">
-            <h3>🔍 Chi Tiết Bản Ghi Thô (Raw Event JSON Payload)</h3>
-            <span class="badge badge-speed">JSON Format</span>
+            <h3>🔍 Chi Tiết Dữ Liệu Thô (Raw JSON Payload)</h3>
+            <button class="btn btn-secondary btn-sm" onclick="openExportModal('raw')">
+              📥 Xuất & Xem Full JSON
+            </button>
           </div>
-          <p class="card-desc">Bản ghi cấu trúc JSON bất biến lưu trữ trong Master Dataset Data Lake:</p>
-          <pre class="json-box" id="json-viewer">// Hãy click vào nút "Xem JSON" của một sự kiện bất kỳ ở bảng trên</pre>
+          <p class="card-desc" id="json-desc">Bản ghi cấu trúc JSON bất biến lưu trữ trong Master Dataset Data Lake:</p>
+          <pre class="json-box" id="json-viewer" style="max-height: 480px; overflow-y: auto;">// Đang tải dữ liệu...</pre>
         </div>
       </div>
     </section>
@@ -315,10 +307,7 @@
     <!-- TAB 4: KIỂM THỬ CHẤT LƯỢNG & LOCUST (BENCHMARK) -->
     <!-- ==================================================== -->
     <section id="tab-benchmark" class="tab-content">
-      <div class="guide-banner">
-        <div class="guide-tag">⚙️ CÔNG CỤ ĐO LƯỜNG ĐẶC TÍNH CHẤT LƯỢNG THỰC TẾ</div>
-        <p><strong>Yêu cầu đề thi Câu 21:</strong> <em>"Liệt kê các đặc tính chất lượng mong muốn... Liệt kê công cụ có thể sử dụng và các bước kiểm tra."</em></p>
-      </div>
+
 
       <div class="grid-2col">
         <!-- Quality Attributes Live Card -->
@@ -424,6 +413,27 @@ locust -f locustfile.py --host http://localhost:5050</code></pre>
   <footer class="app-footer">
     <p>Kiến Trúc Phần Mềm (KTPM) • GV. TS. Ngô Huy Biên • Đại Học 2026</p>
   </footer>
+
+  <!-- FULL PREVIEW & EXPORT MODAL -->
+  <div id="export-modal" class="modal-backdrop" onclick="closeExportModal(event)">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title">📄 Xem Dữ Liệu Thô (Full JSON Payload)</h3>
+        <div class="modal-actions">
+          <button class="btn btn-primary btn-sm" onclick="downloadModalJSON()">💾 Tải Xuống File .JSON</button>
+          <button class="btn btn-secondary btn-sm" onclick="copyModalJSON()">📋 Sao Chép</button>
+          <button class="btn btn-secondary btn-sm" onclick="closeExportModal()">✕ Đóng</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <pre class="modal-json-pre" id="modal-json-content">// Đang nạp dữ liệu...</pre>
+      </div>
+      <div class="modal-footer">
+        <span id="modal-info">Tổng cộng: 0 bản ghi</span>
+        <span id="modal-status" style="color: #16a34a;">● Sẵn sàng xuất</span>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

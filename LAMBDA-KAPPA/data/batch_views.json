@@ -1,23 +1,25 @@
 {
-  "lastBatchRunTime": "2026-08-27T08:47:10.778Z",
-  "cutoffTimestamp": "2026-08-27T08:47:10.777Z",
-  "totalEventsProcessed": 359,
-  "totalBatchRevenue": 187391000,
+  "lastBatchRunTime": "2026-08-27T21:32:24.834Z",
+  "cutoffTimestamp": "2026-08-27T21:32:24.829Z",
+  "totalEventsProcessed": 1601,
+  "totalBatchRevenue": 838791000,
   "storeBatchRevenue": {
-    "STORE_CT_04": 48250000,
-    "STORE_HCM_01": 46441000,
-    "STORE_HN_02": 42350000,
-    "STORE_DN_03": 50350000
+    "STORE_CT_04": 206600000,
+    "STORE_HCM_01": 209741000,
+    "STORE_HN_02": 197100000,
+    "STORE_DN_03": 225350000
   },
   "hourlyBatchRevenue": {
-    "08:00": 184791000,
-    "07:00": 2600000
+    "08:00": 428091000,
+    "07:00": 2600000,
+    "21:00": 370150000,
+    "20:00": 37950000
   },
   "categoryBatchRevenue": {
-    "HomeAppliances": 35250000,
-    "Fashion": 31750000,
-    "Electronics": 43641000,
-    "Beverages": 38250000,
-    "Books": 38500000
+    "HomeAppliances": 147400000,
+    "Fashion": 160950000,
+    "Electronics": 184641000,
+    "Beverages": 173750000,
+    "Books": 172050000
   }
 }

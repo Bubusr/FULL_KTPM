@@ -1,9 +1,17 @@
 // State variables
 let streamInterval = null;
+let autoRefreshInterval = null;
 let streamedCount = 0;
 let hourlyChartInstance = null;
 let storeChartInstance = null;
 let categoryChartInstance = null;
+let activeTabId = 'tab-ingest';
+
+// Utility: Format VNĐ currency
+function formatVND(amount) {
+  if (amount === undefined || amount === null || isNaN(amount)) return '0 VNĐ';
+  return Number(amount).toLocaleString('vi-VN') + ' VNĐ';
+}
 
 // Tab Switcher
 function switchTab(tabId) {
@@ -16,13 +24,29 @@ function switchTab(tabId) {
   const activeTab = document.getElementById(tabId);
   if (activeTab) activeTab.classList.add('active');
 
+  activeTabId = tabId;
+
+  // Clear old auto-refresh
+  if (autoRefreshInterval) { clearInterval(autoRefreshInterval); autoRefreshInterval = null; }
+
   if (tabId === 'tab-dashboard') {
     fetchAnalyticsReport();
+    // Auto-refresh mỗi 3 giây
+    autoRefreshInterval = setInterval(fetchAnalyticsReport, 3000);
   } else if (tabId === 'tab-raw') {
     fetchRawEvents();
+    // Auto-refresh mỗi 3 giây
+    autoRefreshInterval = setInterval(fetchRawEvents, 3000);
   } else if (tabId === 'tab-benchmark') {
     fetchMetrics();
   }
+}
+
+// Helper: refresh tab đang active sau mỗi lần bơm dữ liệu
+function refreshActiveTab() {
+  if (activeTabId === 'tab-dashboard') fetchAnalyticsReport();
+  else if (activeTabId === 'tab-raw') fetchRawEvents();
+  else if (activeTabId === 'tab-benchmark') fetchMetrics();
 }
 
 // ----------------------------------------------------
@@ -61,6 +85,7 @@ async function handleManualSubmit(e) {
       // Update form with random next ID
       document.getElementById('order_id').value = 'ORD-' + Math.floor(10000 + Math.random() * 90000);
       document.getElementById('customer_id').value = 'CUST-' + Math.floor(100 + Math.random() * 900);
+      refreshActiveTab();
     }
   } catch (err) {
     console.error('Ingest error:', err);
@@ -78,6 +103,7 @@ async function seedData(count = 50) {
     });
     const data = await res.json();
     logStreamEntry(`[SEED SUCCESS] ${data.message}`);
+    refreshActiveTab();
   } catch (err) {
     logStreamEntry(`[SEED ERROR] ${err.message}`);
   }
@@ -394,9 +420,81 @@ async function fetchRawEvents() {
 
 function inspectRawJSON(index) {
   const viewer = document.getElementById('json-viewer');
+  const desc = document.getElementById('json-desc');
   if (viewer && rawEventsCache[index]) {
+    if (desc) desc.innerText = `Đang xem chi tiết sự kiện #${index + 1} (${rawEventsCache[index].event_id}) trong tổng số ${rawEventsCache.length} sự kiện:`;
     viewer.innerText = JSON.stringify(rawEventsCache[index], null, 2);
   }
+}
+
+// ====================================================
+// EXPORT PREVIEW MODAL LOGIC (FULL OVERLAY & DOWNLOAD)
+// ====================================================
+let currentModalData = null;
+let currentModalFilename = 'export_data.json';
+
+async function openExportModal(type = 'raw') {
+  const modal = document.getElementById('export-modal');
+  const titleEl = document.getElementById('modal-title');
+  const contentEl = document.getElementById('modal-json-content');
+  const infoEl = document.getElementById('modal-info');
+  if (!modal || !contentEl) return;
+
+  modal.classList.add('active');
+  contentEl.innerText = '// Đang tải toàn bộ dữ liệu thô...';
+
+  try {
+    if (type === 'raw') {
+      titleEl.innerHTML = '📦 Xem Toàn Bộ Dữ Liệu Thô (Master Dataset JSON Array)';
+      const res = await fetch('/api/raw-events?limit=200');
+      const data = await res.json();
+      currentModalData = data.events || rawEventsCache;
+      currentModalFilename = `master_dataset_${new Date().toISOString().substring(0, 10)}.json`;
+      infoEl.innerText = `Tổng cộng: ${currentModalData.length} sự kiện thô bất biến (Master Log)`;
+    } else if (type === 'report') {
+      titleEl.innerHTML = '📊 Dữ Liệu Thô Của Báo Cáo Thống Kê (Serving Layer JSON Payload)';
+      const res = await fetch('/api/analytics/daily-revenue');
+      currentModalData = await res.json();
+      currentModalFilename = `serving_report_revenue_${new Date().toISOString().substring(0, 10)}.json`;
+      const totalRev = currentModalData.metrics?.total_consolidated_revenue || 0;
+      infoEl.innerText = `Doanh thu hợp nhất: ${formatVND(totalRev)} (Serving Merge Output)`;
+    }
+
+    contentEl.innerText = JSON.stringify(currentModalData, null, 2);
+  } catch (err) {
+    contentEl.innerText = '// Lỗi nạp dữ liệu: ' + err.message;
+  }
+}
+
+function closeExportModal(e) {
+  if (e && e.target && !e.target.classList.contains('modal-backdrop') && !e.target.innerText?.includes('Đóng')) {
+    return;
+  }
+  const modal = document.getElementById('export-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+function downloadModalJSON() {
+  if (!currentModalData) {
+    alert('Không có dữ liệu để tải về!');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(currentModalData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = currentModalFilename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyModalJSON() {
+  if (!currentModalData) return;
+  navigator.clipboard.writeText(JSON.stringify(currentModalData, null, 2)).then(() => {
+    alert('✅ Đã sao chép toàn bộ JSON vào bộ nhớ đệm (Clipboard)!');
+  }).catch(() => {
+    alert('Vui lòng bôi đen và nhấn Ctrl+C / Cmd+C để sao chép.');
+  });
 }
 
 // ----------------------------------------------------
@@ -453,3 +551,15 @@ async function runLiveBenchmarkComparison() {
   }
 }
 
+
+// Khởi động: Tải dữ liệu ngay khi trang load xong (không cần bấm tab)
+// Gọi thẳng (script nằm cuối body, DOM đã sẵn sàng)
+fetchAnalyticsReport();
+fetchRawEvents();
+fetchMetrics();
+// Tự động refresh mỗi 5 giây
+setInterval(() => {
+  fetchAnalyticsReport();
+  if (activeTabId === 'tab-raw') fetchRawEvents();
+  if (activeTabId === 'tab-benchmark') fetchMetrics();
+}, 5000);

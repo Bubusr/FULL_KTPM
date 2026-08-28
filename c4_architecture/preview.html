@@ -1,392 +1,695 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏛️ Structurizr C4 Architecture Suite — AI Agents & Cornwall RAG</title>
+  <title>Structurizr C4 Architecture Suite — AI Agents & Cornwall RAG</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
   <style>
-    :root {
-      --sidebar-w: 320px;
-      --bg: #f1f5f9;
-      --surface: #ffffff;
-      --border: #e2e8f0;
-      --border-dark: #0f172a;
-      --ink: #0f172a;
-      --muted: #64748b;
-      --accent: #0284c7;
-      --accent-light: #e0f2fe;
-      --shadow: 3px 3px 0px #0f172a;
-      --shadow-sm: 2px 2px 0px #0f172a;
+    :root[data-theme="dark"] {
+      --bg-base: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent: #818cf8;
+      --accent-glow: rgba(129, 140, 248, 0.2);
+      --grid-dot: rgba(56, 189, 248, 0.12);
+      --glass-bg: rgba(15, 23, 42, 0.85);
+      --shadow-elevation: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+
+    :root[data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: rgba(255, 255, 255, 0.9);
+      --bg-card-hover: #f1f5f9;
+      --border-subtle: #e2e8f0;
+      --border-accent: rgba(2, 132, 199, 0.3);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #94a3b8;
+      --primary: #0284c7;
+      --primary-glow: rgba(2, 132, 199, 0.15);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --grid-dot: rgba(148, 163, 184, 0.25);
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --shadow-elevation: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
-      color: var(--ink);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
       display: flex;
       height: 100vh;
+      width: 100vw;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ──────────── SIDEBAR ──────────── */
     .sidebar {
-      width: var(--sidebar-w);
-      min-width: var(--sidebar-w);
-      background: var(--surface);
-      border-right: 2px solid var(--border-dark);
+      width: 340px;
+      min-width: 340px;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      height: 100%;
+      z-index: 20;
+      backdrop-filter: blur(20px);
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .sidebar-header {
-      padding: 18px 16px 14px;
-      border-bottom: 2px solid var(--border-dark);
-      background: #0f172a;
-      color: #fff;
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%);
     }
 
-    .sidebar-header .logo {
-      font-size: 11px;
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: #38bdf8;
-      margin-bottom: 4px;
+      color: var(--primary);
+      background: var(--primary-glow);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border-accent);
+      margin-bottom: 10px;
     }
 
     .sidebar-header h1 {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 800;
+      letter-spacing: -0.3px;
       line-height: 1.3;
+      color: var(--text-main);
     }
 
     .sidebar-header p {
-      font-size: 11px;
-      color: #94a3b8;
+      font-size: 12px;
+      color: var(--text-muted);
       margin-top: 4px;
     }
 
-    .sidebar-stats {
-      display: flex;
-      gap: 8px;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
-      background: #f8fafc;
+    .search-box {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-subtle);
     }
 
-    .stat-chip {
-      background: var(--accent-light);
-      color: var(--accent);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 7px;
-      border-radius: 4px;
-      border: 1px solid #bae6fd;
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      font-size: 12px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      color: var(--text-dim);
+      font-size: 13px;
     }
 
     .nav-list {
       flex: 1;
       overflow-y: auto;
-      padding: 10px 10px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     .nav-group-label {
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      color: var(--muted);
-      padding: 10px 6px 4px;
+      color: var(--text-dim);
+      padding: 12px 8px 6px;
     }
 
     .nav-item {
-      padding: 9px 11px;
-      border-radius: 6px;
-      border: 1.5px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid transparent;
       cursor: pointer;
-      transition: all 0.1s ease;
-      background: var(--surface);
+      transition: all 0.2s ease;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      position: relative;
     }
 
     .nav-item:hover {
-      border-color: var(--accent);
-      background: var(--accent-light);
+      background: var(--bg-card-hover);
+      border-color: var(--border-subtle);
+      transform: translateX(2px);
     }
 
     .nav-item.active {
-      background: #0f172a;
-      border-color: #0f172a;
-      color: #fff;
-      box-shadow: var(--shadow-sm);
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(129, 140, 248, 0.1) 100%);
+      border-color: var(--border-accent);
+      box-shadow: 0 4px 15px -3px var(--primary-glow);
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      bottom: 12px;
+      width: 3px;
+      background: var(--primary);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .nav-item .nav-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .nav-item .nav-num {
       font-size: 10px;
       font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      margin-bottom: 1px;
-      opacity: 0.6;
+      font-weight: 600;
+      color: var(--text-dim);
     }
 
-    .nav-item.active .nav-num { color: #38bdf8; opacity: 1; }
+    .nav-item.active .nav-num {
+      color: var(--primary);
+    }
+
+    .nav-item .nav-level-pill {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+    }
 
     .nav-item .nav-title {
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 1.3;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.35;
     }
-
-    .nav-item .nav-cat {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .nav-item.active .nav-cat { color: #94a3b8; }
 
     .sidebar-footer {
-      padding: 12px 16px;
-      border-top: 2px solid var(--border-dark);
-      background: #f8fafc;
-      font-size: 10px;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
+      padding: 14px 18px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-surface);
     }
 
-    /* ──────────── MAIN CONTENT ──────────── */
+    .theme-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ──────────── MAIN CANVAS ──────────── */
     .main {
       flex: 1;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-      background: var(--bg);
+      height: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     .topbar {
-      background: var(--surface);
-      border-bottom: 2px solid var(--border-dark);
-      padding: 14px 24px;
+      height: 72px;
+      padding: 0 28px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
       gap: 16px;
     }
 
-    .topbar-icon {
-      width: 42px;
-      height: 42px;
-      background: #0f172a;
-      border-radius: 8px;
+    .topbar-icon-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(129, 140, 248, 0.2) 100%);
+      border: 1px solid var(--border-accent);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 22px;
+      color: var(--primary);
       flex-shrink: 0;
-      box-shadow: var(--shadow-sm);
+      box-shadow: 0 8px 16px -4px var(--primary-glow);
     }
-
-    .topbar-info { flex: 1; }
 
     .topbar-info h2 {
       font-size: 16px;
       font-weight: 800;
-      line-height: 1.2;
+      letter-spacing: -0.2px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .topbar-info p {
       font-size: 12px;
-      color: var(--muted);
-      margin-top: 3px;
-      line-height: 1.4;
+      color: var(--text-muted);
+      margin-top: 2px;
     }
 
     .badge-row {
       display: flex;
-      flex-wrap: wrap;
       gap: 6px;
-      margin-top: 8px;
+      align-items: center;
     }
 
     .badge {
       font-size: 10px;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 4px;
-      border: 1.5px solid;
-    }
-
-    .badge-blue { background: #dbeafe; color: #1e40af; border-color: #93c5fd; }
-    .badge-purple { background: #ede9fe; color: #5b21b6; border-color: #c4b5fd; }
-    .badge-green { background: #dcfce7; color: #14532d; border-color: #86efac; }
-    .badge-amber { background: #fef3c7; color: #78350f; border-color: #fcd34d; }
-    .badge-gray { background: #f1f5f9; color: #475569; border-color: #cbd5e1; }
-    .badge-dark { background: #0f172a; color: #f8fafc; border-color: #334155; }
-
-    .controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .btn {
-      padding: 7px 14px;
-      font-size: 11px;
-      font-weight: 700;
+      padding: 3px 8px;
       border-radius: 6px;
-      border: 2px solid var(--border-dark);
+      border: 1px solid;
+    }
+
+    .badge-blue { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.3); }
+    .badge-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+    .badge-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+    .badge-dark { background: rgba(255, 255, 255, 0.08); color: #cbd5e1; border-color: rgba(255, 255, 255, 0.15); }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
       cursor: pointer;
-      background: var(--surface);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      transition: all 0.1s;
+      transition: all 0.2s;
     }
 
-    .btn:hover {
-      background: var(--ink);
-      color: #fff;
-      box-shadow: var(--shadow-sm);
+    .action-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--primary);
+      color: var(--primary);
     }
 
-    .btn-primary {
-      background: #0f172a;
-      color: #fff;
+    .action-btn-primary {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
     }
 
-    .btn-primary:hover { background: #1e3a5f; }
+    .action-btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
 
-    /* ──────────── DIAGRAM AREA ──────────── */
-    .diagram-wrapper {
+    /* ──────────── CANVAS VIEWPORT ──────────── */
+    .viewport-container {
       flex: 1;
-      overflow: auto;
-      padding: 20px 24px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-
-    .diagram-card {
-      background: var(--surface);
-      border: 2px solid var(--border-dark);
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      overflow: auto;
-      width: 100%;
-      min-height: 500px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 32px;
       position: relative;
+      overflow: hidden;
+      background-color: var(--bg-base);
+      background-image: radial-gradient(var(--grid-dot) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
     }
 
-    .diagram-label {
-      position: absolute;
-      top: 12px;
-      left: 16px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
+    .viewport-container:active {
+      cursor: grabbing;
+    }
+
+    #diagram-canvas {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
     }
 
     #mermaid-target {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-
-    #mermaid-target svg {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .loading-state {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
-      padding: 60px;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.1s ease-out;
     }
 
-    .spinner {
-      width: 20px;
+    #mermaid-target svg {
+      max-width: 95%;
+      max-height: 95%;
+      filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.15));
+    }
+
+    /* ──────────── FLOATING CONTROLS ──────────── */
+    .floating-dock {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow-elevation);
+      z-index: 30;
+    }
+
+    .dock-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dock-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-subtle);
+      color: var(--primary);
+    }
+
+    .dock-divider {
+      width: 1px;
       height: 20px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
+      background: var(--border-subtle);
+      margin: 0 4px;
+    }
+
+    .zoom-text {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 48px;
+      text-align: center;
+    }
+
+    /* ──────────── DRAWER / SPECS PANEL ──────────── */
+    .details-drawer {
+      position: absolute;
+      right: 0;
+      top: 72px;
+      bottom: 0;
+      width: 380px;
+      background: var(--bg-surface);
+      border-left: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-elevation);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(20px);
+    }
+
+    .details-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .drawer-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .drawer-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .drawer-close:hover { color: var(--text-main); }
+
+    .drawer-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .spec-card {
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .spec-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .code-preview {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      max-height: 200px;
+      color: var(--text-muted);
+    }
+
+    /* ──────────── TOAST ──────────── */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1px solid var(--border-accent);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 2.5px solid var(--border-subtle);
+      border-top-color: var(--primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
   </style>
 </head>
 <body>
 
 <div class="sidebar">
   <div class="sidebar-header">
-    <div class="logo">⚡ Structurizr CLI Architecture Suite</div>
-    <h1>AI Agents Studio<br>Cornwall RAG Platform</h1>
-    <p>C4 Model — Architecture as Code</p>
+    <div class="brand-tag">⚡ C4 Model Suite</div>
+    <h1>AI Agents Studio Platform</h1>
+    <p>Cornwall RAG & Multi-Agent Architecture</p>
   </div>
-  <div class="sidebar-stats">
-    <span class="stat-chip">11 Views</span>
-    <span class="stat-chip">C4 Level 1–4</span>
-    <span class="stat-chip">v2024.12</span>
+
+  <div class="search-box">
+    <div class="search-input-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm sơ đồ C4 (Context, RAG, ReAct...)" oninput="filterNav()">
+    </div>
   </div>
+
   <div class="nav-list" id="navList"></div>
+
   <div class="sidebar-footer">
-    workspace.dsl → Structurizr CLI → Mermaid<br>
-    Exported: 2026-08-27
+    <span>11 C4 Views</span>
+    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
+      <span id="themeIcon">☀️</span> <span id="themeText">Light</span>
+    </button>
   </div>
 </div>
 
 <div class="main">
   <div class="topbar">
-    <div class="topbar-icon" id="topbarIcon">🏛️</div>
-    <div class="topbar-info">
-      <h2 id="topbarTitle">Loading…</h2>
-      <p id="topbarDesc">—</p>
-      <div class="badge-row" id="badgeRow"></div>
+    <div class="topbar-left">
+      <div class="topbar-icon-badge" id="topbarIcon">🏛️</div>
+      <div class="topbar-info">
+        <h2 id="topbarTitle">Loading…</h2>
+        <p id="topbarDesc">—</p>
+      </div>
     </div>
-    <div class="controls">
-      <button class="btn" onclick="prevView()">← Prev</button>
-      <button class="btn" onclick="nextView()">Next →</button>
-      <button class="btn btn-primary" onclick="zoomDiagram()">⊞ Fit</button>
+
+    <div class="topbar-actions">
+      <div class="badge-row" id="badgeRow"></div>
+      <button class="action-btn" onclick="prevView()" title="Phím tắt: Mũi tên trái">← Trước</button>
+      <button class="action-btn" onclick="nextView()" title="Phím tắt: Mũi tên phải">Sau →</button>
+      <button class="action-btn action-btn-primary" onclick="toggleDrawer()" id="specToggleBtn">📋 Đặc Tả Kỹ Thuật</button>
     </div>
   </div>
 
-  <div class="diagram-wrapper">
-    <div class="diagram-card">
-      <div class="diagram-label" id="diagramLabel">—</div>
+  <div class="viewport-container" id="viewport">
+    <div id="diagram-canvas">
       <div id="mermaid-target">
-        <div class="loading-state">
+        <div style="display:flex;align-items:center;gap:12px;color:var(--text-muted);font-size:13px;font-weight:600;">
           <div class="spinner"></div>
-          Đang render sơ đồ…
+          Đang khởi tạo sơ đồ kiến trúc…
         </div>
       </div>
     </div>
+
+    <div class="floating-dock">
+      <button class="dock-btn" onclick="zoomIn()" title="Phóng to (+)">+</button>
+      <div class="zoom-text" id="zoomLevel">100%</div>
+      <button class="dock-btn" onclick="zoomOut()" title="Thu nhỏ (-)">−</button>
+      <div class="dock-divider"></div>
+      <button class="dock-btn" onclick="resetZoom()" title="Vừa màn hình (Fit)">⊞</button>
+      <button class="dock-btn" onclick="copyMermaidSource()" title="Sao chép mã nguồn Mermaid">📄</button>
+      <button class="dock-btn" onclick="downloadSVG()" title="Tải xuống SVG">💾</button>
+      <button class="dock-btn" onclick="toggleFullscreen()" title="Toàn màn hình">⛶</button>
+    </div>
+  </div>
+
+  <!-- Collapsible Details Drawer -->
+  <div class="details-drawer" id="detailsDrawer">
+    <div class="drawer-header">
+      <h3>📋 Đặc Tả Kiến Trúc & Công Nghệ</h3>
+      <button class="drawer-close" onclick="toggleDrawer()">✕</button>
+    </div>
+    <div class="drawer-content" id="drawerContent">
+      <!-- Injected dynamically -->
+    </div>
   </div>
 </div>
+
+<div class="toast" id="toast">Thông báo</div>
 
 <script>
 const MMD = {
@@ -864,72 +1167,99 @@ const MMD = {
 };
 
 const VIEWS = [
-  { id: "SystemContext", title: "1. System Context (Level 1)", desc: "C4 Level 1 \u2014 T\u1ed5ng quan h\u1ec7 th\u1ed1ng: AI Agents Studio + 1 User + 3 External Systems", cat: "Ng\u1eef c\u1ea3nh h\u1ec7 th\u1ed1ng" },
-  { id: "Containers", title: "2. Container Diagram (Level 2)", desc: "C4 Level 2 \u2014 Ph\u00e2n r\u00e3 8 Container: Web SPA, FastAPI, ChatStore, LLM Engine, LangGraph ReAct, RAG Tools, Weather Tools, 2 Databases", cat: "Container" },
-  { id: "FrontendComponents", title: "3. Frontend SPA Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 4 component trong static/index.html: Chat UI, Session Manager, Model Selector, Fetch Client", cat: "Component: Frontend" },
-  { id: "BackendComponents", title: "4. FastAPI Backend Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 6 component trong web/server.py: CORS, Health, Model, Chat CRUD, Message, Static endpoints", cat: "Component: Backend" },
-  { id: "ChatStoreComponents", title: "5. Chat Store Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 4 component trong web/chat_store.py: _load_db/_save_db, get_all_chats, create_chat, add_message", cat: "Component: ChatStore" },
-  { id: "LLMEngineComponents", title: "6. LLM Engine Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 6 component trong web/llm_engine.py: MODELS_CONFIG, health checker, process_chat, _process_api_mode, _process_g4f_mode, MemorySaver", cat: "Component: LLMEngine" },
-  { id: "AgentComponents", title: "7. LangGraph ReAct Agent Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 5 component trong tasks/main_03_01.py: AgentState, LLM Node, ToolNode, ReAct Loop, System Prompt", cat: "Component: ReAct Agent" },
-  { id: "RAGComponents", title: "8. RAG Travel Tools Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 6 component trong tools/travel.py: CORNWALL_TRAVEL_DOCS, TextSplitter, Embedding, ChromaDB, Retriever, @tool", cat: "Component: RAG Tools" },
-  { id: "WeatherComponents", title: "9. Weather Tools Components", desc: "C4 Level 3 \u2014 Chi ti\u1ebft 4 component trong tools/weather.py: mock_weather_forecast, instant_real_weather (Open-Meteo), real_weather_forecast (OWM), TypedDict", cat: "Component: Weather" },
-  { id: "DynamicAPIMode", title: "10. Dynamic View \u2014 API Mode Flow (23 b\u01b0\u1edbc)", desc: "Dynamic \u2014 Lu\u1ed3ng x\u1eed l\u00fd \u0111\u1ea7y \u0111\u1ee7 API Mode: User \u2192 Frontend \u2192 FastAPI \u2192 ChatStore \u2192 LLMEngine \u2192 LangGraph \u2192 RAG \u2192 Weather \u2192 LLM Cloud \u2192 Response", cat: "Dynamic: Process" },
-  { id: "DeploymentView", title: "11. Deployment View (Production)", desc: "C4 Level 4 \u2014 Tri\u1ec3n khai v\u1eadt l\u00fd 3 t\u1ea7ng: Client Browser / App Server (Uvicorn:8000 + Local Disk) / External Cloud (HCMUS AI + Open-Meteo + G4F)", cat: "Deployment" },
+  { id: "SystemContext", title: "1. System Context (Level 1)", desc: "C4 Level 1 — Ngữ cảnh hệ thống: AI Agents Studio + Người dùng du lịch + 3 External Cloud Systems", cat: "Ngữ cảnh hệ thống", level: "Level 1" },
+  { id: "Containers", title: "2. Container Diagram (Level 2)", desc: "C4 Level 2 — Phân rã 8 Containers: Web SPA, FastAPI Gateway, ChatStore, LLMEngine, LangGraph ReAct, RAG Tools, Weather Tools, 2 Databases", cat: "Container View", level: "Level 2" },
+  { id: "FrontendComponents", title: "3. Frontend SPA Components", desc: "C4 Level 3 — Chi tiết 4 components trong static/index.html: Chat UI, Session Manager, Model Selector, Fetch API Client", cat: "Component: Frontend", level: "Level 3" },
+  { id: "BackendComponents", title: "4. FastAPI Backend Server Components", desc: "C4 Level 3 — Chi tiết 6 components trong web/server.py: CORS, Health, Model, Chat CRUD, Message, Static Endpoints", cat: "Component: Backend", level: "Level 3" },
+  { id: "ChatStoreComponents", title: "5. Chat Store Persistence Components", desc: "C4 Level 3 — Chi tiết 4 components trong web/chat_store.py: _load_db/_save_db, get_all_chats, create_chat, add_message", cat: "Component: ChatStore", level: "Level 3" },
+  { id: "LLMEngineComponents", title: "6. LLM Engine Router Components", desc: "C4 Level 3 — Chi tiết 6 components trong web/llm_engine.py: MODELS_CONFIG, check_model_health, process_chat, _process_api_mode, _process_g4f_mode, MemorySaver", cat: "Component: LLMEngine", level: "Level 3" },
+  { id: "AgentComponents", title: "7. LangGraph ReAct Agent Components", desc: "C4 Level 3 — Chi tiết 5 components trong tasks/main_03_01.py: AgentState, LLM Node, ToolNode, ReAct Loop, System Prompt", cat: "Component: ReAct Agent", level: "Level 3" },
+  { id: "RAGComponents", title: "8. RAG Travel Tools Service Components", desc: "C4 Level 3 — Chi tiết 6 components trong tools/travel.py: CORNWALL_TRAVEL_DOCS, TextSplitter, Embedding, ChromaDB, Retriever, @tool", cat: "Component: RAG Tools", level: "Level 3" },
+  { id: "WeatherComponents", title: "9. Weather Tools Service Components", desc: "C4 Level 3 — Chi tiết 4 components trong tools/weather.py: mock_weather_forecast, instant_real_weather (Open-Meteo), real_weather_forecast (OWM), TypedDict", cat: "Component: Weather", level: "Level 3" },
+  { id: "DynamicAPIMode", title: "10. Dynamic Process View — API Mode Flow", desc: "Dynamic View — Chu trình tương tác toàn trình 23 bước: User → SPA → FastAPI → ChatStore → LLMEngine → LangGraph → RAG → Weather → LLM Cloud", cat: "Dynamic Process", level: "Dynamic" },
+  { id: "DeploymentView", title: "11. Deployment View (Production 4 Tầng)", desc: "C4 Level 4 — Triển khai vật lý 4 tầng: Client Browser / App Server (Uvicorn :8000) / Private Vector Storage / External Cloud Inference", cat: "Deployment View", level: "Level 4" },
 ];
 
-
 const VIEW_META = {
-  "SystemContext":       { icon: "🌐", badges: ["Level 1", "System Context", "Box & Arrow"], colors: ["badge-blue", "badge-gray", "badge-dark"] },
-  "Containers":          { icon: "📦", badges: ["Level 2", "Container", "8 Containers"], colors: ["badge-blue", "badge-purple", "badge-green"] },
-  "FrontendComponents":  { icon: "🖥️", badges: ["Level 3", "Component", "static/index.html"], colors: ["badge-blue", "badge-amber", "badge-gray"] },
-  "BackendComponents":   { icon: "⚙️", badges: ["Level 3", "Component", "web/server.py"], colors: ["badge-blue", "badge-amber", "badge-gray"] },
-  "ChatStoreComponents": { icon: "💾", badges: ["Level 3", "Component", "web/chat_store.py"], colors: ["badge-blue", "badge-amber", "badge-gray"] },
-  "LLMEngineComponents": { icon: "🤖", badges: ["Level 3", "Component", "web/llm_engine.py"], colors: ["badge-blue", "badge-amber", "badge-gray"] },
-  "AgentComponents":     { icon: "🧠", badges: ["Level 3", "Component", "tasks/main_03_01.py"], colors: ["badge-blue", "badge-purple", "badge-gray"] },
-  "RAGComponents":       { icon: "🔍", badges: ["Level 3", "Component", "tools/travel.py"], colors: ["badge-blue", "badge-green", "badge-gray"] },
-  "WeatherComponents":   { icon: "🌤️", badges: ["Level 3", "Component", "tools/weather.py"], colors: ["badge-blue", "badge-amber", "badge-gray"] },
-  "DynamicAPIMode":      { icon: "⚡", badges: ["Dynamic View", "API Mode", "23 Steps"], colors: ["badge-dark", "badge-blue", "badge-green"] },
-  "DeploymentView":      { icon: "🚀", badges: ["Level 4", "Deployment", "3-Tier Production"], colors: ["badge-blue", "badge-green", "badge-dark"] },
+  "SystemContext":       { icon: "🌐", badges: ["Level 1", "System Context", "3 External APIs"], colors: ["badge-blue", "badge-dark", "badge-purple"], tech: "HTTPS / REST / JSON", files: "web/server.py, tools/travel.py, tools/weather.py" },
+  "Containers":          { icon: "📦", badges: ["Level 2", "Container View", "8 Containers"], colors: ["badge-blue", "badge-purple", "badge-green"], tech: "FastAPI, LangGraph, ChromaDB, HuggingFace", files: "web/, tools/, tasks/" },
+  "FrontendComponents":  { icon: "🖥️", badges: ["Level 3", "Component", "static/index.html"], colors: ["badge-blue", "badge-amber", "badge-dark"], tech: "HTML5, Vanilla CSS, JavaScript Fetch API", files: "web/static/index.html, app.js, style.css" },
+  "BackendComponents":   { icon: "⚙️", badges: ["Level 3", "Component", "web/server.py"], colors: ["badge-blue", "badge-amber", "badge-green"], tech: "Python 3.11, FastAPI 0.115, Uvicorn", files: "web/server.py" },
+  "ChatStoreComponents": { icon: "💾", badges: ["Level 3", "Component", "web/chat_store.py"], colors: ["badge-blue", "badge-amber", "badge-purple"], tech: "Python File I/O, Flat JSON Database", files: "web/chat_store.py, web/chats_db.json" },
+  "LLMEngineComponents": { icon: "🤖", badges: ["Level 3", "Component", "web/llm_engine.py"], colors: ["badge-blue", "badge-amber", "badge-green"], tech: "LangChain, ChatOpenAI, G4F Mesh", files: "web/llm_engine.py" },
+  "AgentComponents":     { icon: "🧠", badges: ["Level 3", "Component", "tasks/main_03_01.py"], colors: ["badge-blue", "badge-purple", "badge-dark"], tech: "LangGraph StateGraph, MemorySaver, ReAct", files: "tasks/main_03_01.py" },
+  "RAGComponents":       { icon: "🔍", badges: ["Level 3", "Component", "tools/travel.py"], colors: ["badge-blue", "badge-green", "badge-dark"], tech: "ChromaDB, all-MiniLM-L6-v2 (384-dim), HNSW", files: "tools/travel.py, chroma_db/" },
+  "WeatherComponents":   { icon: "🌤️", badges: ["Level 3", "Component", "tools/weather.py"], colors: ["badge-blue", "badge-amber", "badge-green"], tech: "Open-Meteo REST API, OpenWeatherMap Wrapper", files: "tools/weather.py" },
+  "DynamicAPIMode":      { icon: "⚡", badges: ["Dynamic View", "API Mode", "23 Steps Flow"], colors: ["badge-dark", "badge-blue", "badge-green"], tech: "ReAct Execution Trace, Tool Observation", files: "web/server.py, web/llm_engine.py" },
+  "DeploymentView":      { icon: "🚀", badges: ["Level 4", "Deployment", "4-Tier Architecture"], colors: ["badge-blue", "badge-green", "badge-dark"], tech: "Uvicorn ASGI :8000, NVMe SSD, HTTPS TLS 1.3", files: "run_web.py, .env, chroma_db/" },
 };
 
 let activeIndex = 0;
 let renderCounter = 0;
+let currentZoom = 1.0;
+let panX = 0;
+let panY = 0;
+let isPanning = false;
+let startX = 0;
+let startY = 0;
+let panZoomInstance = null;
 
+// Initialize Mermaid with high-aesthetic styling
 mermaid.initialize({
   startOnLoad: false,
-  theme: 'default',
+  theme: 'neutral',
   securityLevel: 'loose',
   flowchart: { htmlLabels: true, curve: 'basis', useMaxWidth: false },
-  fontSize: 14,
+  fontSize: 13,
+  fontFamily: 'Inter, sans-serif',
 });
 
-function renderNav() {
+function renderNav(filter = '') {
   const nav = document.getElementById('navList');
   const groups = {
-    'Context & Container': [0, 1],
-    'Component Level (Level 3)': [2, 3, 4, 5, 6, 7, 8],
-    'Process & Deployment': [9, 10],
+    'Level 1 & 2: Tổng quan hệ thống': [0, 1],
+    'Level 3: Chi tiết các Components': [2, 3, 4, 5, 6, 7, 8],
+    'Level 4 & Dynamic: Quy trình & Triển khai': [9, 10],
   };
 
   let html = '';
+  const q = filter.trim().toLowerCase();
+
   for (const [label, indices] of Object.entries(groups)) {
+    const filteredIndices = indices.filter(i => {
+      if (!q) return true;
+      const v = VIEWS[i];
+      return v.title.toLowerCase().includes(q) || v.desc.toLowerCase().includes(q) || v.cat.toLowerCase().includes(q);
+    });
+
+    if (filteredIndices.length === 0) continue;
+
     html += `<div class="nav-group-label">${label}</div>`;
-    for (const i of indices) {
+    for (const i of filteredIndices) {
       const v = VIEWS[i];
       const meta = VIEW_META[v.id];
       const active = i === activeIndex ? 'active' : '';
       html += `<div class="nav-item ${active}" onclick="selectView(${i})">
-        <div class="nav-num">${String(i+1).padStart(2,'0')} — ${v.cat}</div>
-        <div class="nav-title">${meta.icon} ${v.title.replace(/^[0-9]+\.\s+/, '')}</div>
+        <div class="nav-meta">
+          <span class="nav-num">${String(i+1).padStart(2,'0')} — ${v.level}</span>
+          <span class="nav-level-pill">${v.cat.split(':')[0]}</span>
+        </div>
+        <div class="nav-title">${meta.icon} ${v.title.replace(/^[0-9]+.s+/, '')}</div>
       </div>`;
     }
   }
-  nav.innerHTML = html;
+
+  nav.innerHTML = html || `<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:12px;">Không tìm thấy sơ đồ phù hợp.</div>`;
+}
+
+function filterNav() {
+  const val = document.getElementById('searchInput').value;
+  renderNav(val);
 }
 
 async function selectView(index) {
   activeIndex = index;
-  renderNav();
+  renderNav(document.getElementById('searchInput').value);
 
   const v = VIEWS[index];
   const meta = VIEW_META[v.id];
@@ -939,35 +1269,67 @@ async function selectView(index) {
   document.getElementById('topbarIcon').textContent = meta.icon;
   document.getElementById('topbarTitle').textContent = v.title;
   document.getElementById('topbarDesc').textContent = v.desc;
-  document.getElementById('diagramLabel').textContent = v.cat + ' — ' + v.id;
 
   const badgeRow = document.getElementById('badgeRow');
   badgeRow.innerHTML = meta.badges.map((b, i) =>
-    `<span class="badge ${meta.colors[i]}">${b}</span>`
+    `<span class="badge ${meta.colors[i % meta.colors.length]}">${b}</span>`
   ).join('');
+
+  // Update Drawer Specs
+  updateDrawerContent(v, meta, code);
 
   // Render diagram
   const target = document.getElementById('mermaid-target');
-  target.innerHTML = '<div class="loading-state"><div class="spinner"></div>Đang render...</div>';
+  target.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;font-weight:600;"><div class="spinner"></div>Đang render sơ đồ C4...</div>`;
 
-  await new Promise(r => setTimeout(r, 50));
+  await new Promise(r => setTimeout(r, 40));
 
   const uid = `mermaid-${index}-${++renderCounter}`;
   try {
     const { svg } = await mermaid.render(uid, code);
     target.innerHTML = svg;
-    // Remove fixed dimensions from SVG for responsiveness
-    const svgEl = target.querySelector('svg');
-    if (svgEl) {
-      svgEl.style.maxWidth = '100%';
-      svgEl.style.height = 'auto';
-      svgEl.removeAttribute('height');
-    }
+    
+    // Reset transform
+    currentZoom = 1.0;
+    panX = 0;
+    panY = 0;
+    applyTransform();
   } catch (e) {
-    target.innerHTML = `<div style="padding:24px;color:#dc2626;font-family:monospace;font-size:12px;background:#fff1f2;border:1px solid #fca5a5;border-radius:8px;max-width:600px">
-      <strong>❌ Mermaid Render Error</strong><br><br>${e.message}
+    target.innerHTML = `<div style="padding:24px;color:#ef4444;font-family:monospace;font-size:12px;background:rgba(239, 68, 68, 0.1);border:1px solid rgba(239, 68, 68, 0.3);border-radius:10px;max-width:600px">
+      <strong>❌ Lỗi Biên Dịch Mermaid</strong><br><br>${e.message}
     </div>`;
   }
+}
+
+function updateDrawerContent(v, meta, code) {
+  const content = document.getElementById('drawerContent');
+  content.innerHTML = `
+    <div class="spec-card">
+      <div class="spec-card-title">📌 Phân Loại Kiến Trúc</div>
+      <div style="font-weight:700;font-size:13px;color:var(--text-main);">${v.title}</div>
+      <div style="color:var(--text-muted);margin-top:4px;">${v.desc}</div>
+    </div>
+
+    <div class="spec-card">
+      <div class="spec-card-title">🛠️ Công Nghệ & Giao Thức</div>
+      <div><strong>Công nghệ lõi:</strong> ${meta.tech}</div>
+      <div style="margin-top:4px;"><strong>Tệp mã nguồn:</strong> <code style="font-family:'JetBrains Mono';color:var(--primary);">${meta.files}</code></div>
+    </div>
+
+    <div class="spec-card">
+      <div class="spec-card-title">💻 Mã Nguồn Mermaid DSL</div>
+      <div class="code-preview">${escapeHtml(code)}</div>
+    </div>
+  `;
+}
+
+function escapeHtml(text) {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function toggleDrawer() {
+  const drawer = document.getElementById('detailsDrawer');
+  drawer.classList.toggle('open');
 }
 
 function prevView() {
@@ -978,20 +1340,111 @@ function nextView() {
   selectView((activeIndex + 1) % VIEWS.length);
 }
 
-function zoomDiagram() {
-  const svg = document.querySelector('#mermaid-target svg');
-  if (svg) {
-    svg.style.width = '100%';
-    svg.style.height = 'auto';
-    svg.removeAttribute('width');
-    svg.removeAttribute('height');
+// Canvas Zoom & Pan
+function applyTransform() {
+  const target = document.getElementById('mermaid-target');
+  target.style.transform = `translate(${panX}px, ${panY}px) scale(${currentZoom})`;
+  document.getElementById('zoomLevel').textContent = `${Math.round(currentZoom * 100)}%`;
+}
+
+function zoomIn() {
+  currentZoom = Math.min(currentZoom + 0.15, 3.0);
+  applyTransform();
+}
+
+function zoomOut() {
+  currentZoom = Math.max(currentZoom - 0.15, 0.3);
+  applyTransform();
+}
+
+function resetZoom() {
+  currentZoom = 1.0;
+  panX = 0;
+  panY = 0;
+  applyTransform();
+  showToast('Đã đặt lại kích thước vừa vặn');
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
   }
 }
 
+function copyMermaidSource() {
+  const code = MMD[VIEWS[activeIndex].id];
+  navigator.clipboard.writeText(code);
+  showToast('Đã sao chép mã nguồn Mermaid vào Clipboard!');
+}
+
+function downloadSVG() {
+  const svgEl = document.querySelector('#mermaid-target svg');
+  if (!svgEl) return;
+  const svgData = new XMLSerializer().serializeToString(svgEl);
+  const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${VIEWS[activeIndex].id}.svg`;
+  link.click();
+  URL.revokeObjectURL(url);
+  showToast('Đã tải xuống tệp SVG!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeIcon').textContent = isDark ? '🌙' : '☀️';
+  document.getElementById('themeText').textContent = isDark ? 'Dark' : 'Light';
+}
+
+// Mouse Drag Pan Events
+const viewport = document.getElementById('viewport');
+viewport.addEventListener('mousedown', e => {
+  if (e.target.closest('.floating-dock') || e.target.closest('.details-drawer')) return;
+  isPanning = true;
+  startX = e.clientX - panX;
+  startY = e.clientY - panY;
+});
+
+window.addEventListener('mousemove', e => {
+  if (!isPanning) return;
+  panX = e.clientX - startX;
+  panY = e.clientY - startY;
+  applyTransform();
+});
+
+window.addEventListener('mouseup', () => { isPanning = false; });
+
+viewport.addEventListener('wheel', e => {
+  e.preventDefault();
+  if (e.deltaY < 0) {
+    currentZoom = Math.min(currentZoom + 0.08, 3.0);
+  } else {
+    currentZoom = Math.max(currentZoom - 0.08, 0.3);
+  }
+  applyTransform();
+}, { passive: false });
+
 // Keyboard navigation
 document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextView();
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevView();
+  if (e.key === '+' || e.key === '=') zoomIn();
+  if (e.key === '-' || e.key === '_') zoomOut();
+  if (e.key === '0') resetZoom();
+  if (e.key === 'f' || e.key === 'F') toggleFullscreen();
 });
 
 // Initialize
